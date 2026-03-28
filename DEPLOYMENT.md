@@ -1,5 +1,34 @@
 # Adswadi deployment guide
 
+## Push this project to GitHub
+
+The repository is configured with `origin` pointing to:
+
+`https://github.com/adimizexpert/adswadi-marketing.git`
+
+From the project root, after committing:
+
+```bash
+git push -u origin main
+```
+
+If Git asks for credentials, use one of:
+
+- **GitHub CLI:** `gh auth login`, then run `git push` again.
+- **HTTPS:** a [Personal Access Token](https://github.com/settings/tokens) with `repo` scope (use it as the password when prompted).
+- **SSH:** add an SSH key in GitHub settings and change the remote:  
+  `git remote set-url origin git@github.com:adimizexpert/adswadi-marketing.git`
+
+If the remote already has commits (e.g. a README created on GitHub), pull and merge first:
+
+```bash
+git pull origin main --allow-unrelated-histories
+# resolve conflicts if any, then
+git push -u origin main
+```
+
+---
+
 This repository contains:
 
 - **Frontend:** Next.js 14 (App Router) — deploy on **Vercel**
