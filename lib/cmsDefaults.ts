@@ -65,7 +65,7 @@ export const defaultPlans: CmsPlan[] = [
 export const defaultServices: CmsService[] = [
   {
     id: 1,
-    icon: "📝",
+    icon: "filetext",
     title: "High-Retention Scripting",
     description:
       "Psychology-based storytelling jo audience ko screen se chhodne na de. Deep research + viral hooks + emotional arc — sab included.",
@@ -81,7 +81,7 @@ export const defaultServices: CmsService[] = [
   },
   {
     id: 3,
-    icon: "🖼️",
+    icon: "image",
     title: "High-CTR Thumbnails",
     description:
       "Aise designs jo scroll ruk ke click karne par majboor karein. A/B tested, data-backed, brand-consistent.",

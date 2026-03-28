@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import WhatsAppLogo from "@/components/WhatsAppLogo";
 
 function splitWords(text: string) {
   return text.trim().split(/\s+/).filter(Boolean);
@@ -56,17 +57,11 @@ export default function CTASection({
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="animate-breathe mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-white px-10 py-4 text-base font-bold text-[#7C3AED] shadow-lg focus-visible:outline focus-visible:ring-2 focus-visible:ring-white sm:text-lg"
+            className="animate-breathe mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-10 py-4 text-base font-bold text-white shadow-lg transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-white sm:text-lg"
           >
-            <motion.span
-              className="inline-flex"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-              <MessageCircle className="h-6 w-6" aria-hidden />
-            </motion.span>
+            <WhatsAppLogo className="h-6 w-6 shrink-0" />
             WhatsApp Par Baat Karein
-            <span aria-hidden>→</span>
+            <ArrowRight className="h-5 w-5" aria-hidden />
           </motion.a>
         </motion.div>
       </div>

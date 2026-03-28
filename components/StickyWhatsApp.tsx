@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import WhatsAppLogo from "@/components/WhatsAppLogo";
 import { WHATSAPP_URL } from "@/lib/constants";
 
 export default function StickyWhatsApp({
@@ -49,9 +50,9 @@ export default function StickyWhatsApp({
             rel="noopener noreferrer"
             className="wa-ping-ring relative flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-green-900/20 ring-2 ring-white/30 transition-transform focus-visible:outline focus-visible:ring-2 focus-visible:ring-white active:scale-95"
           >
-            <MessageCircle className="h-5 w-5" aria-hidden />
+            <WhatsAppLogo className="h-5 w-5 shrink-0" />
             WhatsApp Par Baat Karein
-            <span aria-hidden>→</span>
+            <ArrowRight className="h-5 w-5" aria-hidden />
           </a>
         </motion.div>
       )}

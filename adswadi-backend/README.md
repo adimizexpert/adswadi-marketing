@@ -1,55 +1,55 @@
 # Adswadi CMS API
 
-Express + Supabase backend for the Adswadi landing page content and admin operations.
+Express + **PostgreSQL** (`pg`) for the Adswadi landing page and admin CMS.  
+Database: **Render Postgres** (recommended with Render hosting) or any Postgres 14+.
 
-## Supabase setup
+## Database setup
 
-1. Create a free project at [https://supabase.com](https://supabase.com).
-2. Open **SQL Editor** → **New query**.
-3. Copy the SQL from the comment block at the top of `src/db.js` (between the dashed lines) and run it once. This creates tables, seeds plans, site content, services, and the default admin user.
-4. In **Project Settings → API**, copy:
-   - **Project URL** → `SUPABASE_URL`
-   - **service_role** key (secret) → `SUPABASE_SERVICE_ROLE_KEY`  
-     Use the **service role** key only on the server; never expose it in the browser.
+1. Create a PostgreSQL database (e.g. [Render Postgres](https://render.com/docs/databases-postgresql) in the same region as your API).
+2. Run the SQL in **`schema.sql`** once:
+   - **Render:** open your Postgres → **Connect** → use **Shell** or **psql** with the **External** connection string, then paste/run `schema.sql`, **or**
+   - Copy `schema.sql` into the SQL console your provider gives you.
+3. Note **`DATABASE_URL`** (connection string). On Render, link the DB to your Web Service so `DATABASE_URL` is injected automatically, or paste it manually under Environment.
 
 ## Local development
 
 ```bash
 cp .env.example .env
-# Fill in Supabase keys, JWT_SECRET, and FRONTEND_URL (e.g. http://localhost:3000)
+# Set DATABASE_URL, JWT_SECRET, FRONTEND_URL (e.g. http://localhost:3000)
+# DATABASE_SSL=true if your DB requires SSL
 npm install
 npm run dev
 ```
 
 The API listens on `PORT` (default **3001**).
 
-## Deploy on Render (free tier)
+## Deploy on Render (Web Service)
 
-1. Push this `adswadi-backend` folder to a Git repository.
-2. In Render: **New** → **Web Service** → connect the repo.
-3. **Root directory**: `adswadi-backend` (if the repo contains both frontend and backend).
-4. **Build command**: `npm install`
-5. **Start command**: `npm start`
-6. **Environment variables** (same as `.env.example`):
-   - `SUPABASE_URL`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `JWT_SECRET` (long random string)
-   - `FRONTEND_URL` (your Next.js URL, e.g. `https://adswadi.vercel.app`)
-   - `PORT` is set automatically by Render; you usually do not need to override it.
+1. **New** → **Web Service** → connect your Git repo.
+2. **Root directory:** `adswadi-backend`
+3. **Build:** `npm install` · **Start:** `npm start`
+4. **Environment variables:**
 
-### IMPORTANT: Render free tier sleep
+   | Variable | Notes |
+   |----------|--------|
+   | `DATABASE_URL` | From Render Postgres (use **Internal** URL if API and DB are both on Render in the same region) |
+   | `DATABASE_SSL` | `true` when using Render’s **External** URL or any host that requires SSL |
+   | `JWT_SECRET` | Long random string |
+   | `FRONTEND_URL` | Your Vercel site URL, e.g. `https://your-app.vercel.app` |
 
-Render’s free Web Services **spin down after about 15 minutes** of inactivity. First request after sleep can be slow (cold start).
+5. `PORT` is set by Render automatically.
 
-**Keep the service warm:** use a free cron ping (e.g. [cron-job.org](https://cron-job.org)) to call **`GET /api/health`** on your Render URL **every 10 minutes**. Example: `https://your-app.onrender.com/api/health`.
+### Free tier sleep
+
+Free Web Services sleep after ~15 minutes idle. Ping **`GET /api/health`** on a cron (e.g. every 10 minutes) if you want fewer cold starts.
 
 ## Admin password
 
-- Default login (from seed SQL): username **`admin`**, password **`adswadi2025`**. **Change this immediately** in production.
+Default (from seed): **`admin`** / **`adswadi2025`** — change in production.
 
 ### Change password (authenticated)
 
-`POST /api/admin/change-password` with header `Authorization: Bearer <JWT>` and JSON body:
+`POST /api/admin/change-password` with `Authorization: Bearer <JWT>`:
 
 ```json
 {
@@ -58,15 +58,11 @@ Render’s free Web Services **spin down after about 15 minutes** of inactivity.
 }
 ```
 
-## Generate a bcrypt hash for a custom seed
-
-If you insert or replace an admin row manually:
+## Bcrypt hash for manual SQL
 
 ```bash
 node -e "const b=require('bcrypt');b.hash('adswadi2025',10).then(console.log)"
 ```
-
-Paste the printed hash into the `password_hash` column in SQL.
 
 ## API summary
 
@@ -82,4 +78,4 @@ Paste the printed hash into the `password_hash` column in SQL.
 | PATCH | `/api/services/:id` | JWT |
 | POST | `/api/admin/change-password` | JWT |
 
-CORS allows only `FRONTEND_URL`. For local Next.js use `http://localhost:3000` (or your dev port).
+CORS allows only `FRONTEND_URL`. Local Next.js: `http://localhost:3000`.

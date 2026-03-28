@@ -23,9 +23,7 @@ function ServiceVisual({ icon }: { icon: string | null }) {
     );
   }
   return (
-    <span className="text-3xl leading-none" aria-hidden>
-      {raw || "📝"}
-    </span>
+    <FileText className="h-8 w-8 text-[#7C3AED]" strokeWidth={1.75} aria-hidden />
   );
 }
 

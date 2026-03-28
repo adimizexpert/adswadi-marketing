@@ -1,23 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { CircleX } from "lucide-react";
 import { scaleUpVariant, staggerContainer } from "@/lib/animations";
 import { useIsMobile } from "@/lib/useIsMobile";
 
 const pains = [
   {
-    emoji: "❌",
     title: "Ghante mehnat karte ho, views phir bhi nahi aate",
     sub: "Mehnat sahi direction mein honi chahiye — warna burnout hi milta hai.",
   },
   {
-    emoji: "❌",
     title:
       "Script likhna, edit karna, thumbnail banana — akele sab impossible hai",
     sub: "Har cheez alag skill hai; ek insaan sab perfect nahi kar sakta.",
   },
   {
-    emoji: "❌",
     title: "Doosre creators aage nikal rahe hain, aap wahi khade ho",
     sub: "Jab system na ho, growth ruk jaati hai — consistency bhi mushkil lagti hai.",
   },
@@ -60,14 +58,14 @@ export default function ProblemSection() {
               className="group rounded-2xl border border-purple-100 bg-white p-6 text-left shadow-card"
             >
               <motion.span
-                className="inline-block text-2xl"
+                className="inline-flex text-rose-600"
                 aria-hidden
                 whileHover={{
                   rotate: [-5, 5, -5, 0],
                   transition: { duration: 0.45 },
                 }}
               >
-                {item.emoji}
+                <CircleX className="h-7 w-7" strokeWidth={2} />
               </motion.span>
               <h3 className="mt-3 text-lg font-bold text-gray-900">
                 {item.title}

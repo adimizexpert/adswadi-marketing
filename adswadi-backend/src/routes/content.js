@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { supabase } = require("../db");
+const { query } = require("../db");
 const authMiddleware = require("../middleware/auth");
 
 const router = express.Router();
@@ -11,15 +11,10 @@ router.get("/health", (req, res) => {
 
 router.get("/plans", async (req, res, next) => {
   try {
-    const { data, error } = await supabase
-      .from("plans")
-      .select("*")
-      .order("price", { ascending: true });
-
-    if (error) {
-      return next(error);
-    }
-    return res.json(data || []);
+    const { rows } = await query(
+      `SELECT * FROM plans ORDER BY price ASC`
+    );
+    return res.json(rows || []);
   } catch (err) {
     return next(err);
   }
@@ -27,16 +22,9 @@ router.get("/plans", async (req, res, next) => {
 
 router.get("/content", async (req, res, next) => {
   try {
-    const { data, error } = await supabase
-      .from("site_content")
-      .select("key, value");
-
-    if (error) {
-      return next(error);
-    }
-
+    const { rows } = await query(`SELECT key, value FROM site_content`);
     const out = {};
-    for (const row of data || []) {
+    for (const row of rows || []) {
       out[row.key] = row.value;
     }
     return res.json(out);
@@ -47,15 +35,10 @@ router.get("/content", async (req, res, next) => {
 
 router.get("/services", async (req, res, next) => {
   try {
-    const { data, error } = await supabase
-      .from("services")
-      .select("*")
-      .order("sort_order", { ascending: true });
-
-    if (error) {
-      return next(error);
-    }
-    return res.json(data || []);
+    const { rows } = await query(
+      `SELECT * FROM services ORDER BY sort_order ASC`
+    );
+    return res.json(rows || []);
   } catch (err) {
     return next(err);
   }
@@ -103,21 +86,23 @@ router.patch("/plans/:id", authMiddleware, async (req, res, next) => {
 
     patch.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
-      .from("plans")
-      .update(patch)
-      .eq("id", id)
-      .select()
-      .maybeSingle();
+    const keys = Object.keys(patch);
+    const values = keys.map((k) =>
+      k === "features" ? JSON.stringify(patch[k]) : patch[k]
+    );
+    const setParts = keys.map((k, i) =>
+      k === "features" ? `features = $${i + 1}::jsonb` : `${k} = $${i + 1}`
+    );
+    const idParam = keys.length + 1;
+    const sql = `UPDATE plans SET ${setParts.join(", ")} WHERE id = $${idParam} RETURNING *`;
+    const { rows } = await query(sql, [...values, id]);
 
-    if (error) {
-      return next(error);
-    }
-    if (!data) {
+    const row = rows[0];
+    if (!row) {
       return res.status(404).json({ error: "Plan not found" });
     }
 
-    return res.json(data);
+    return res.json(row);
   } catch (err) {
     return next(err);
   }
@@ -132,23 +117,18 @@ router.patch("/content/:key", authMiddleware, async (req, res, next) => {
       return res.status(400).json({ error: "value is required" });
     }
 
-    const row = {
-      key,
-      value: String(value),
-      updated_at: new Date().toISOString(),
-    };
+    const updatedAt = new Date().toISOString();
+    const { rows } = await query(
+      `INSERT INTO site_content (key, value, updated_at)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (key) DO UPDATE SET
+         value = EXCLUDED.value,
+         updated_at = EXCLUDED.updated_at
+       RETURNING *`,
+      [key, String(value), updatedAt]
+    );
 
-    const { data, error } = await supabase
-      .from("site_content")
-      .upsert(row, { onConflict: "key" })
-      .select()
-      .single();
-
-    if (error) {
-      return next(error);
-    }
-
-    return res.json(data);
+    return res.json(rows[0]);
   } catch (err) {
     return next(err);
   }
@@ -187,21 +167,19 @@ router.patch("/services/:id", authMiddleware, async (req, res, next) => {
 
     patch.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
-      .from("services")
-      .update(patch)
-      .eq("id", id)
-      .select()
-      .maybeSingle();
+    const keys = Object.keys(patch);
+    const values = keys.map((k) => patch[k]);
+    const setParts = keys.map((k, i) => `${k} = $${i + 1}`);
+    const idParam = keys.length + 1;
+    const sql = `UPDATE services SET ${setParts.join(", ")} WHERE id = $${idParam} RETURNING *`;
+    const { rows } = await query(sql, [...values, id]);
 
-    if (error) {
-      return next(error);
-    }
-    if (!data) {
+    const row = rows[0];
+    if (!row) {
       return res.status(404).json({ error: "Service not found" });
     }
 
-    return res.json(data);
+    return res.json(row);
   } catch (err) {
     return next(err);
   }
@@ -221,15 +199,12 @@ router.post("/admin/change-password", authMiddleware, async (req, res, next) => 
       });
     }
 
-    const { data: user, error: fetchErr } = await supabase
-      .from("admin_users")
-      .select("id, password_hash")
-      .eq("id", req.user.id)
-      .maybeSingle();
+    const { rows } = await query(
+      `SELECT id, password_hash FROM admin_users WHERE id = $1 LIMIT 1`,
+      [req.user.id]
+    );
+    const user = rows[0];
 
-    if (fetchErr) {
-      return next(fetchErr);
-    }
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -241,14 +216,10 @@ router.post("/admin/change-password", authMiddleware, async (req, res, next) => 
 
     const password_hash = await bcrypt.hash(String(new_password), 10);
 
-    const { error: updateErr } = await supabase
-      .from("admin_users")
-      .update({ password_hash })
-      .eq("id", user.id);
-
-    if (updateErr) {
-      return next(updateErr);
-    }
+    await query(`UPDATE admin_users SET password_hash = $1 WHERE id = $2`, [
+      password_hash,
+      user.id,
+    ]);
 
     return res.json({ success: true });
   } catch (err) {

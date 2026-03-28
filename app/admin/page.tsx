@@ -637,7 +637,7 @@ function ServicesEditor({
           <h2 className="text-lg font-bold text-[#EC4899]">Service #{svc.id}</h2>
           <div className="mt-4 grid gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">Icon (emoji or filetext / clapperboard / image)</label>
+              <label className="text-sm font-medium text-gray-700">Icon key: filetext, clapperboard, or image</label>
               <input
                 className="mt-1 w-full rounded-xl border border-purple-100 px-3 py-2"
                 value={svc.icon ?? ""}

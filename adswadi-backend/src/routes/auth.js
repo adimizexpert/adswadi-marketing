@@ -2,7 +2,7 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { supabase } = require("../db");
+const { query } = require("../db");
 
 const router = express.Router();
 
@@ -23,15 +23,12 @@ router.post("/login", loginLimiter, async (req, res, next) => {
         .json({ error: "Username and password required" });
     }
 
-    const { data: user, error } = await supabase
-      .from("admin_users")
-      .select("id, username, password_hash")
-      .eq("username", String(username))
-      .maybeSingle();
+    const { rows } = await query(
+      `SELECT id, username, password_hash FROM admin_users WHERE username = $1 LIMIT 1`,
+      [String(username)]
+    );
+    const user = rows[0];
 
-    if (error) {
-      return next(error);
-    }
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }

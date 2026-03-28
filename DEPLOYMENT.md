@@ -1,162 +1,137 @@
 # Adswadi deployment guide
 
+Stack: **GitHub** → **Vercel** (Next.js) + **Render** (API + Postgres). No third-party BaaS.
+
 ## Push this project to GitHub
-
-The repository is configured with `origin` pointing to:
-
-`https://github.com/adimizexpert/adswadi-marketing.git`
-
-From the project root, after committing:
 
 ```bash
 git push -u origin main
 ```
 
-If Git asks for credentials, use one of:
-
-- **GitHub CLI:** `gh auth login`, then run `git push` again.
-- **HTTPS:** a [Personal Access Token](https://github.com/settings/tokens) with `repo` scope (use it as the password when prompted).
-- **SSH:** add an SSH key in GitHub settings and change the remote:  
-  `git remote set-url origin git@github.com:adimizexpert/adswadi-marketing.git`
-
-If the remote already has commits (e.g. a README created on GitHub), pull and merge first:
+Use GitHub CLI, HTTPS + PAT, or SSH as needed. If the remote already has commits:
 
 ```bash
 git pull origin main --allow-unrelated-histories
-# resolve conflicts if any, then
 git push -u origin main
 ```
 
 ---
 
-This repository contains:
+## What’s in this repo
 
-- **Frontend:** Next.js 14 (App Router) — deploy on **Vercel**
-- **Backend:** Express + Supabase — deploy on **Render**
-- **Database:** Supabase (PostgreSQL) — free tier
-
-Follow the steps in order: Supabase → Render (API) → Vercel (site) → connect CORS.
+| Part | Host |
+|------|------|
+| Next.js app | **Vercel** (repo root) |
+| Express API | **Render** Web Service (`adswadi-backend/`) |
+| PostgreSQL | **Render Postgres** (or any Postgres; Render keeps everything in one place) |
 
 ---
 
 ## Prerequisites
 
-- GitHub account with this repo pushed
-- [Supabase](https://supabase.com) account (free)
-- [Render](https://render.com) account (free)
-- [Vercel](https://vercel.com) account (free)
+- GitHub repo pushed
+- [Render](https://render.com) account
+- [Vercel](https://vercel.com) account
 
 ---
 
-## 1. Supabase (database and seed data)
+## 1. Create PostgreSQL on Render
 
-1. Create a new project in the [Supabase Dashboard](https://supabase.com/dashboard).
-2. Open **SQL Editor** → **New query**.
-3. Copy the SQL from the comment block at the top of `adswadi-backend/src/db.js` (between the dashed lines) and run it once.  
-   This creates tables, seeds plans, site content, services, and the default admin user.
-4. Go to **Project Settings → API** and copy:
-   - **Project URL** → used as `SUPABASE_URL`
-   - **`service_role` secret** → used as `SUPABASE_SERVICE_ROLE_KEY` (server only; never expose in the browser)
+1. In [Render Dashboard](https://dashboard.render.com): **New +** → **PostgreSQL**.
+2. Choose name, region (same as your API later), instance (free tier if available).
+3. After creation, open the database → **Connect** — you will use:
+   - **Internal Database URL** — for the Web Service in the **same** region (recommended).
+   - **External Database URL** — for local dev or if the API runs elsewhere; often requires SSL.
+
+4. **Initialize schema:** open **Shell** (or use `psql` with the external URL) and run the full contents of **`adswadi-backend/schema.sql`** once. This creates tables and seed data (admin, plans, content, services).
 
 ---
 
-## 2. Deploy the backend on Render
+## 2. Deploy the API on Render
 
-1. In [Render](https://dashboard.render.com), click **New +** → **Web Service**.
-2. Connect **GitHub** and select the repository **`adimizexpert/adswadi-marketing`**.
-3. Configure the service:
+1. **New +** → **Web Service** → connect **`adimizexpert/adswadi-marketing`** (or your repo).
+2. Settings:
 
    | Setting | Value |
    |---------|--------|
-   | **Name** | e.g. `adswadi-api` |
-   | **Region** | Choose closest to your users |
-   | **Branch** | `main` (or your default branch) |
    | **Root directory** | `adswadi-backend` |
-   | **Runtime** | `Node` |
    | **Build command** | `npm install` |
    | **Start command** | `npm start` |
-   | **Instance type** | Free (or paid if you need always-on) |
 
-4. Add **Environment variables** (click **Advanced** if needed):
+3. **Environment variables:**
 
    | Key | Value |
    |-----|--------|
-   | `SUPABASE_URL` | From Supabase Project URL |
-   | `SUPABASE_SERVICE_ROLE_KEY` | Supabase `service_role` key |
-   | `JWT_SECRET` | Long random string (generate locally, e.g. `openssl rand -hex 32`) |
-   | `FRONTEND_URL` | Your **Vercel production URL** after first deploy (see §3). For first API deploy you can use a placeholder and update after Vercel is live. Example: `https://adswadi-marketing.vercel.app` |
-   | `PORT` | Leave unset — Render sets `PORT` automatically |
+   | `DATABASE_URL` | Paste **Internal** URL from your Render Postgres, **or** link the database in the Web Service UI so Render injects it. |
+   | `DATABASE_SSL` | `true` if you use the **External** URL or your provider requires SSL; for **Internal** Render URL you can omit or set `false`. |
+   | `JWT_SECRET` | e.g. `openssl rand -hex 32` |
+   | `FRONTEND_URL` | Your Vercel URL (set after step 3), e.g. `https://adswadi-marketing.vercel.app` |
 
-5. Create the Web Service and wait for the first deploy. Note your app URL, e.g. `https://adswadi-api.onrender.com`.
+4. Deploy and test: `https://YOUR-SERVICE.onrender.com/api/health` → `{ "status": "ok", ... }`.
 
-6. **Free tier cold starts:** Render free services sleep after ~15 minutes idle. Use a free cron (e.g. [cron-job.org](https://cron-job.org)) to request **`GET https://YOUR-RENDER-URL.onrender.com/api/health`** every **10 minutes** so the API stays warm. This is optional but improves first-load speed.
-
-7. **Smoke test:** Open `https://YOUR-RENDER-URL.onrender.com/api/health` — you should see JSON like `{ "status": "ok", "timestamp": "..." }`.
+5. Optional: cron **GET** `/api/health` every ~10 minutes to reduce cold starts on the free tier.
 
 ---
 
 ## 3. Deploy the frontend on Vercel
 
-1. Go to [Vercel](https://vercel.com) → **Add New…** → **Project**.
-2. **Import** the GitHub repository **`adimizexpert/adswadi-marketing`**.
-3. Vercel should detect **Next.js**. Keep defaults unless you use a monorepo layout that needs a different root (this repo’s Next app is at the **repository root**).
-4. Add **Environment variables** (Production — and Preview if you want):
+1. **Import** the same GitHub repo.
+2. Framework: **Next.js** (root = app).
+3. **Environment variable:**
 
    | Name | Value |
    |------|--------|
-   | `NEXT_PUBLIC_API_URL` | Your Render API origin **without a trailing slash**, e.g. `https://adswadi-api.onrender.com` |
+   | `NEXT_PUBLIC_API_URL` | `https://YOUR-RENDER-API.onrender.com` (no trailing slash) |
 
-5. Click **Deploy**.
+4. Deploy, then copy the production URL.
 
-6. After deploy, copy the **production URL** (e.g. `https://adswadi-marketing.vercel.app`).
-
-7. **Update CORS on Render:** In your Render Web Service → **Environment** → set `FRONTEND_URL` to that exact Vercel URL (including `https://`, no trailing slash) → **Save changes** (Render will redeploy).
+5. On Render → Web Service → **Environment** → set **`FRONTEND_URL`** to that Vercel URL exactly (`https://...`, no trailing slash) → save (redeploy).
 
 ---
 
-## 4. Verify end-to-end
+## 4. Verify
 
-1. Open your Vercel URL — the landing page should load; pricing/services should load from the API if `NEXT_PUBLIC_API_URL` is correct.
-2. Open `https://YOUR-VERCEL-URL/admin` — login with the seeded admin (see `adswadi-backend/README.md`); ensure `NEXT_PUBLIC_API_URL` matches your Render URL.
-3. If the browser blocks requests, check `FRONTEND_URL` on Render matches the Vercel URL exactly.
+- Open the Vercel URL — pricing/content should load from the API.
+- Open **`/admin`** — log in with seeded user (see `adswadi-backend/README.md`).
+- If you see CORS errors, **`FRONTEND_URL`** on Render must match the browser origin.
 
 ---
 
-## 5. Environment variable checklist
+## 5. Environment checklist
 
-**Render (`adswadi-backend`)**
+**Render Web Service**
 
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `DATABASE_URL`
+- `DATABASE_SSL` (when needed)
 - `JWT_SECRET`
-- `FRONTEND_URL` → Vercel production URL
+- `FRONTEND_URL`
 
-**Vercel (Next.js root)**
+**Vercel**
 
-- `NEXT_PUBLIC_API_URL` → Render API base URL (no `/` at the end)
+- `NEXT_PUBLIC_API_URL`
 
-**Local development**
+**Local**
 
-- Next.js: copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_API_URL=http://localhost:3001` (or your local API port).
-- Backend: copy `adswadi-backend/.env.example` to `adswadi-backend/.env` and set variables; use `FRONTEND_URL=http://localhost:3000` when testing locally.
+- Next: `.env.local` → `NEXT_PUBLIC_API_URL=http://localhost:3001`
+- API: `adswadi-backend/.env` from `.env.example`; `FRONTEND_URL=http://localhost:3000`
 
 ---
 
 ## 6. Troubleshooting
 
-| Issue | What to check |
-|--------|----------------|
-| API returns CORS error | `FRONTEND_URL` on Render must match the exact origin you use in the browser (scheme + host, no path). |
-| Landing shows fallback/static data | `NEXT_PUBLIC_API_URL` missing or wrong on Vercel; redeploy after changing env. |
-| Admin login fails | API URL in `.env` / Vercel; Supabase keys; admin user exists (SQL seed). |
-| Slow first API request | Render free tier cold start; use `/api/health` cron ping or upgrade instance. |
+| Issue | Check |
+|--------|--------|
+| `ECONNREFUSED` / DB errors | `DATABASE_URL`, SSL flags, Postgres running, `schema.sql` applied |
+| CORS | `FRONTEND_URL` matches Vercel exactly |
+| Site shows defaults | `NEXT_PUBLIC_API_URL` on Vercel; redeploy after changes |
+| Admin 401 | Seed ran; JWT_SECRET stable between deploys |
 
 ---
 
-## 7. Security reminders
+## 7. Security
 
-- Rotate the default admin password via `/admin` after going live.
-- Never commit `.env` or `.env.local`; only `.env.example` files belong in git.
-- Use the Supabase **service role** key only on Render, never in `NEXT_PUBLIC_*` variables.
+- Change default admin password after launch.
+- Never commit `.env` / `.env.local`.
+- `JWT_SECRET` stays server-only on Render.
 
-For API route details and local commands, see `adswadi-backend/README.md`.
+See **`adswadi-backend/README.md`** for API details.

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { slideLeftVariant, slideRightVariant } from "@/lib/animations";
 
 const rows = [
@@ -51,7 +52,7 @@ export default function WhyUs() {
                 transition={{ duration: 0.6 }}
               >
                 <motion.span
-                  className="text-xl leading-none"
+                  className="inline-flex shrink-0 text-red-600"
                   aria-hidden
                   initial={{ x: 0 }}
                   whileInView={{
@@ -60,7 +61,7 @@ export default function WhyUs() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.3 }}
                 >
-                  ❌
+                  <XCircle className="h-6 w-6" strokeWidth={2} />
                 </motion.span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-red-600/90">
@@ -80,14 +81,14 @@ export default function WhyUs() {
                 transition={{ duration: 0.6 }}
               >
                 <motion.span
-                  className="text-xl leading-none"
+                  className="inline-flex shrink-0 text-emerald-600"
                   aria-hidden
                   initial={{ scale: 0 }}
                   whileInView={{ scale: [0, 1.2, 1] }}
                   viewport={{ once: true }}
                   transition={{ type: "spring", stiffness: 500, damping: 16, delay: 0.15 }}
                 >
-                  ✅
+                  <CheckCircle2 className="h-6 w-6" strokeWidth={2} />
                 </motion.span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">

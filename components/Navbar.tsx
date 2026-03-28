@@ -13,6 +13,8 @@ import {
 import { Menu, X } from "lucide-react";
 import clsx from "clsx";
 import { WHATSAPP_URL } from "@/lib/constants";
+import NavbarLogo from "@/components/NavbarLogo";
+import WhatsAppLogo from "@/components/WhatsAppLogo";
 import { staggerContainer } from "@/lib/animations";
 
 type NavbarProps = { whatsappUrl?: string };
@@ -74,17 +76,7 @@ export default function Navbar({ whatsappUrl = WHATSAPP_URL }: NavbarProps) {
       }}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <motion.div
-          animate={{ y: [0, -4, 0] }}
-          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        >
-          <Link
-            href="#home"
-            className="bg-gradient-to-r from-[#7C3AED] via-[#EC4899] to-[#3B82F6] bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl"
-          >
-            Adswadi
-          </Link>
-        </motion.div>
+        <NavbarLogo />
 
         <ul className="hidden items-center gap-6 text-sm font-medium text-gray-700 md:flex">
           {navItems.map((item) => (
@@ -104,8 +96,9 @@ export default function Navbar({ whatsappUrl = WHATSAPP_URL }: NavbarProps) {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center rounded-full border-2 border-[#7C3AED] px-5 py-2 text-sm font-semibold text-[#7C3AED] transition-all duration-300 hover:bg-[#7C3AED] hover:text-white hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#7C3AED]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2 text-sm font-semibold text-white shadow-md transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
           >
+            <WhatsAppLogo className="h-4 w-4 shrink-0" />
             Free Consultation
           </a>
         </div>
@@ -179,8 +172,9 @@ export default function Navbar({ whatsappUrl = WHATSAPP_URL }: NavbarProps) {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-center rounded-full border-2 border-[#7C3AED] px-5 py-3 text-sm font-semibold text-[#7C3AED] transition-all duration-300 hover:bg-[#7C3AED] hover:text-white hover:shadow-[0_0_20px_rgba(124,58,237,0.35)]"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#25D366]"
                   >
+                    <WhatsAppLogo className="h-4 w-4 shrink-0" />
                     Free Consultation
                   </a>
                 </motion.li>

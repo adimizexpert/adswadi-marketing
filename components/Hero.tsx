@@ -9,6 +9,7 @@ import {
   Instagram,
   Youtube,
 } from "lucide-react";
+import WhatsAppLogo from "@/components/WhatsAppLogo";
 import {
   fadeInVariant,
   fadeUpVariant,
@@ -187,25 +188,9 @@ export default function Hero({
               rel="noopener noreferrer"
               whileHover={{ scale: isMobile ? 0.98 : 1.05 }}
               whileTap={{ scale: 0.97 }}
-              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-[#7C3AED] bg-white/60 px-8 py-3.5 text-base font-semibold text-[#7C3AED] shadow-sm backdrop-blur-sm transition-colors hover:bg-[#7C3AED] hover:text-white focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#7C3AED]"
+              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-[#25D366] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-green-900/15 transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
             >
-              <span
-                className="absolute inset-0 rounded-full opacity-40"
-                style={{
-                  boxShadow: "inset 0 0 20px rgba(124,58,237,0.25)",
-                }}
-              />
-              <motion.span
-                className="absolute inset-0 rounded-full"
-                animate={{
-                  boxShadow: [
-                    "0 0 0 0 rgba(124,58,237,0.35)",
-                    "0 0 24px 2px rgba(124,58,237,0.35)",
-                    "0 0 0 0 rgba(124,58,237,0.35)",
-                  ],
-                }}
-                transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-              />
+              <WhatsAppLogo className="relative z-[1] h-5 w-5 shrink-0" />
               <span className="relative z-[1]">Free Consultation Book Karein</span>
               <motion.span
                 className="relative z-[1] inline-flex"

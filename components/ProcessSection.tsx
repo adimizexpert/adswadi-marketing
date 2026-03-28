@@ -1,29 +1,41 @@
 "use client";
 
 import { motion } from "framer-motion";
+import {
+  Clapperboard,
+  LineChart,
+  PenLine,
+  Target,
+  type LucideIcon,
+} from "lucide-react";
 
-const steps = [
+const steps: {
+  num: number;
+  Icon: LucideIcon;
+  title: string;
+  body: string;
+}[] = [
   {
     num: 1,
-    emoji: "🎯",
+    Icon: Target,
     title: "Strategy",
     body: "Aapke niche, audience aur goals ko deeply samjhte hain",
   },
   {
     num: 2,
-    emoji: "✍️",
+    Icon: PenLine,
     title: "Script & Plan",
     body: "Viral hooks, deep research, complete episode planning",
   },
   {
     num: 3,
-    emoji: "🎬",
+    Icon: Clapperboard,
     title: "Production",
     body: "Script se lekar final edit tak — sab humari team karta hai",
   },
   {
     num: 4,
-    emoji: "📈",
+    Icon: LineChart,
     title: "Upload & Analyse",
     body: "Video upload + GSC-style result tracking + iteration",
   },
@@ -62,7 +74,9 @@ export default function ProcessSection() {
             aria-hidden
           />
           <ol className="relative space-y-10">
-            {steps.map((step, i) => (
+            {steps.map((step, i) => {
+              const StepIcon = step.Icon;
+              return (
               <li key={step.num} className="flex gap-4 pl-1">
                 <motion.div
                   className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#7C3AED] to-[#EC4899] text-sm font-bold text-white shadow-md"
@@ -88,11 +102,13 @@ export default function ProcessSection() {
                 >
                   <p className="text-lg font-bold text-gray-900">
                     <motion.span
-                      className="inline-block"
+                      className="mr-2 inline-flex align-middle text-[#7C3AED]"
                       whileHover={{ y: [-2, 0, -2] }}
                       transition={{ duration: 0.4 }}
                     >
-                      <span aria-hidden>{step.emoji} </span>
+                      <span aria-hidden>
+                        <StepIcon className="h-5 w-5" strokeWidth={2} />
+                      </span>
                     </motion.span>
                     {step.title}
                   </p>
@@ -101,7 +117,8 @@ export default function ProcessSection() {
                   </p>
                 </motion.div>
               </li>
-            ))}
+            );
+            })}
           </ol>
         </div>
 
@@ -116,7 +133,9 @@ export default function ProcessSection() {
             aria-hidden
           />
           <ol className="relative grid grid-cols-4 gap-4">
-            {steps.map((step, i) => (
+            {steps.map((step, i) => {
+              const StepIcon = step.Icon;
+              return (
               <li key={step.num} className="flex flex-col items-center text-center">
                 <motion.div
                   className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#7C3AED] to-[#EC4899] text-sm font-bold text-white shadow-lg"
@@ -142,11 +161,13 @@ export default function ProcessSection() {
                 >
                   <p className="text-base font-bold text-gray-900">
                     <motion.span
-                      className="inline-block"
+                      className="mr-2 inline-flex align-middle text-[#7C3AED]"
                       whileHover={{ y: [-3, 0, -3] }}
                       transition={{ duration: 0.35 }}
                     >
-                      <span aria-hidden>{step.emoji} </span>
+                      <span aria-hidden>
+                        <StepIcon className="h-5 w-5" strokeWidth={2} />
+                      </span>
                     </motion.span>
                     {step.title}
                   </p>
@@ -155,7 +176,8 @@ export default function ProcessSection() {
                   </p>
                 </motion.div>
               </li>
-            ))}
+            );
+            })}
           </ol>
         </div>
       </div>
