@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+  body {
+    @apply antialiased text-gray-800;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer utilities {
+  .nav-link-underline {
+    @apply relative inline-block;
+  }
+  .nav-link-underline::after {
+    content: "";
+    @apply absolute bottom-0 left-0 h-0.5 w-0 origin-left rounded-full bg-[#7C3AED] transition-all duration-300 ease-out;
+  }
+  .nav-link-underline:hover::after,
+  .nav-link-underline:focus-visible::after {
+    @apply w-full;
+  }
+
+  .btn-secondary-line {
+    @apply relative;
+  }
+  .btn-secondary-line::after {
+    content: "";
+    @apply absolute bottom-0 left-0 h-px w-0 bg-[#7C3AED] transition-all duration-300 ease-out;
+  }
+  .btn-secondary-line:hover::after,
+  .btn-secondary-line:focus-visible::after {
+    @apply w-full;
+  }
+
+  .text-shimmer-gradient {
+    background: linear-gradient(
+      90deg,
+      currentColor 0%,
+      rgba(255, 255, 255, 0.95) 45%,
+      currentColor 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: text-shimmer 3s ease-in-out infinite;
+  }
+
+  .plan-gold-ring {
+    position: relative;
+    isolation: isolate;
+  }
+  .plan-gold-ring::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    z-index: -1;
+    background: conic-gradient(
+      from 0deg,
+      #7c3aed,
+      #ec4899,
+      #fbbf24,
+      #7c3aed
+    );
+    animation: border-spin 4s linear infinite;
+    opacity: 0.85;
+  }
+  .plan-gold-ring::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: inherit;
+    z-index: -1;
+    background: white;
+  }
+
+  .cta-gradient-animated {
+    background: linear-gradient(
+      120deg,
+      #7c3aed 0%,
+      #a855f7 35%,
+      #ec4899 70%,
+      #7c3aed 100%
+    );
+    background-size: 200% 200%;
+    animation: gradient-shift 6s ease infinite;
+  }
+
+  .portfolio-shimmer-bg {
+    background: linear-gradient(
+      110deg,
+      #e5e7eb 0%,
+      #f3f4f6 40%,
+      #ffffff 50%,
+      #f3f4f6 60%,
+      #e5e7eb 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  .wa-ping-ring::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    border: 2px solid rgba(37, 211, 102, 0.6);
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
