@@ -1,57 +1,55 @@
--- Run once against your PostgreSQL database (Render Postgres → Shell, or psql).
--- Safe to re-run: seeds use WHERE NOT EXISTS / ON CONFLICT where applicable.
+-- SQLite schema (single file DB — no external Postgres). Applied automatically on API startup.
 
 CREATE TABLE IF NOT EXISTS plans (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   label TEXT NOT NULL,
   price INTEGER NOT NULL,
   badge TEXT,
-  features JSONB NOT NULL,
+  features TEXT NOT NULL,
   cta_text TEXT NOT NULL,
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TEXT DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS site_content (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL,
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TEXT DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS services (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   icon TEXT,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TEXT DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS admin_users (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL
 );
 
-INSERT INTO admin_users (username, password_hash)
-VALUES ('admin', '$2b$10$xaPVFDblFfz6eTYSZhFw3eanFEMBPoQPWZ0Zi5C7L5u4X4p7oM6kS')
-ON CONFLICT (username) DO NOTHING;
+INSERT OR IGNORE INTO admin_users (username, password_hash)
+VALUES ('admin', '$2b$10$xaPVFDblFfz6eTYSZhFw3eanFEMBPoQPWZ0Zi5C7L5u4X4p7oM6kS');
 
 INSERT INTO plans (name, label, price, badge, features, cta_text)
 SELECT 'silver', 'Starter Pack', 9999, NULL,
-  '["4 Long Videos / Month","Basic Research & Scripting","Standard Cuts & Subtitles","4 Thumbnail Designs","Email Support"]'::jsonb,
+  '["4 Long Videos / Month","Basic Research & Scripting","Standard Cuts & Subtitles","4 Thumbnail Designs","Email Support"]',
   'Silver Se Shuru Karein'
 WHERE NOT EXISTS (SELECT 1 FROM plans WHERE name = 'silver');
 
 INSERT INTO plans (name, label, price, badge, features, cta_text)
 SELECT 'gold', 'Growth Pack', 18999, 'Most Popular',
-  '["8 Long Videos / Month","Deep Storytelling Scripts","Premium Motion Graphics","8 Thumbnails + A/B Testing","Priority WhatsApp Support"]'::jsonb,
+  '["8 Long Videos / Month","Deep Storytelling Scripts","Premium Motion Graphics","8 Thumbnails + A/B Testing","Priority WhatsApp Support"]',
   'Gold Choose Karein'
 WHERE NOT EXISTS (SELECT 1 FROM plans WHERE name = 'gold');
 
 INSERT INTO plans (name, label, price, badge, features, cta_text)
 SELECT 'diamond', 'Diamond Pack', 29999, NULL,
-  '["12 Long + 10 Shorts / Month","Viral Hooks + Growth Strategy","Netflix-Style Documentary Editing","Unlimited Thumbnail Revisions","Personal Brand Consultant"]'::jsonb,
+  '["12 Long + 10 Shorts / Month","Viral Hooks + Growth Strategy","Netflix-Style Documentary Editing","Unlimited Thumbnail Revisions","Personal Brand Consultant"]',
   'Diamond Le Lo'
 WHERE NOT EXISTS (SELECT 1 FROM plans WHERE name = 'diamond');
 

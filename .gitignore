@@ -30,6 +30,9 @@ adswadi-backend/.env
 
 # backend
 adswadi-backend/node_modules
+adswadi-backend/data/*.db
+adswadi-backend/data/*.db-wal
+adswadi-backend/data/*.db-shm
 
 # vercel
 .vercel

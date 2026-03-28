@@ -1,47 +1,63 @@
 /**
- * PostgreSQL connection pool (Render Postgres, local Postgres, Docker, etc.).
+ * SQLite file database — no external Postgres. One Render Web Service is enough.
  *
- * Run schema once: `adswadi-backend/schema.sql` via Render Shell / psql.
+ * Env: SQLITE_PATH (optional) — absolute path to the .db file.
+ * Default: adswadi-backend/data/adswadi.db
  *
- * Env: DATABASE_URL=postgresql://user:pass@host:5432/dbname
- * Render: Internal URL for same-region services, or External URL from your machine.
- * SSL: set DATABASE_SSL=true if your provider requires SSL (Render external connections).
+ * On Render free tier, disk is ephemeral: DB may reset on redeploy. See DEPLOYMENT.md.
  */
 
-const { Pool } = require("pg");
+const fs = require("fs");
+const path = require("path");
+const Database = require("better-sqlite3");
 require("dotenv").config();
 
-function poolConfig() {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    console.warn("[db] DATABASE_URL is not set.");
-    return {};
-  }
-  const needsSsl =
-    process.env.DATABASE_SSL === "true" ||
-    url.includes("render.com") ||
-    url.includes("sslmode=require");
-  return {
-    connectionString: url,
-    max: 10,
-    idleTimeoutMillis: 30_000,
-    ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
-  };
+const dataDir = path.join(__dirname, "..", "data");
+const defaultDbPath = path.join(dataDir, "adswadi.db");
+const dbPath = process.env.SQLITE_PATH || defaultDbPath;
+
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
 }
 
-const pool = new Pool(poolConfig());
+const db = new Database(dbPath);
+db.pragma("journal_mode = WAL");
 
-pool.on("error", (err) => {
-  console.error("[db] Unexpected pool error", err);
-});
+const schemaPath = path.join(__dirname, "..", "schema.sql");
+if (fs.existsSync(schemaPath)) {
+  const schema = fs.readFileSync(schemaPath, "utf8");
+  db.exec(schema);
+} else {
+  console.warn("[db] schema.sql not found — tables may be missing.");
+}
 
 /**
+ * PG-style $1, $2 → SQLite ? placeholders; strips ::jsonb.
  * @param {string} text
  * @param {unknown[]} [params]
  */
-async function query(text, params) {
-  const res = await pool.query(text, params);
-  return res;
+async function query(text, params = []) {
+  const sql = String(text)
+    .replace(/::jsonb/gi, "")
+    .replace(/\$(\d+)/g, "?");
+  const trimmed = sql.trim();
+  const hasReturning = /RETURNING/i.test(sql);
+
+  if (/^\s*SELECT/i.test(trimmed)) {
+    const stmt = db.prepare(sql);
+    const rows = stmt.all(...params);
+    return { rows };
+  }
+
+  if (hasReturning) {
+    const stmt = db.prepare(sql);
+    const rows = stmt.all(...params);
+    return { rows };
+  }
+
+  const stmt = db.prepare(sql);
+  const info = stmt.run(...params);
+  return { rows: [], rowCount: info.changes };
 }
 
-module.exports = { pool, query };
+module.exports = { db, query };

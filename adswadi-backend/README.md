@@ -1,29 +1,25 @@
 # Adswadi CMS API
 
-Express + **PostgreSQL** (`pg`) for the Adswadi landing page and admin CMS.  
-Database: **Render Postgres** (recommended with Render hosting) or any Postgres 14+.
+Express + **SQLite** (`better-sqlite3`) — one database file, **no paid Postgres**. Fits a single **Render Web Service** (or any Node host).
 
-## Database setup
+## How the DB works
 
-1. Create a PostgreSQL database (e.g. [Render Postgres](https://render.com/docs/databases-postgresql) in the same region as your API).
-2. Run the SQL in **`schema.sql`** once:
-   - **Render:** open your Postgres → **Connect** → use **Shell** or **psql** with the **External** connection string, then paste/run `schema.sql`, **or**
-   - Copy `schema.sql` into the SQL console your provider gives you.
-3. Note **`DATABASE_URL`** (connection string). On Render, link the DB to your Web Service so `DATABASE_URL` is injected automatically, or paste it manually under Environment.
+- **File:** `data/adswadi.db` (created automatically next to the app).
+- **Schema:** `schema.sql` runs **on startup** (creates tables + seeds if missing).
+- **Override path:** set **`SQLITE_PATH`** to an absolute path (optional).
 
 ## Local development
 
 ```bash
 cp .env.example .env
-# Set DATABASE_URL, JWT_SECRET, FRONTEND_URL (e.g. http://localhost:3000)
-# DATABASE_SSL=true if your DB requires SSL
+# Set JWT_SECRET, FRONTEND_URL (e.g. http://localhost:3000)
 npm install
 npm run dev
 ```
 
-The API listens on `PORT` (default **3001**).
+The API listens on `PORT` (default **3001**). The SQLite file appears under `adswadi-backend/data/`.
 
-## Deploy on Render (Web Service)
+## Deploy on Render (Web Service only)
 
 1. **New** → **Web Service** → connect your Git repo.
 2. **Root directory:** `adswadi-backend`
@@ -32,12 +28,12 @@ The API listens on `PORT` (default **3001**).
 
    | Variable | Notes |
    |----------|--------|
-   | `DATABASE_URL` | From Render Postgres (use **Internal** URL if API and DB are both on Render in the same region) |
-   | `DATABASE_SSL` | `true` when using Render’s **External** URL or any host that requires SSL |
    | `JWT_SECRET` | Long random string |
    | `FRONTEND_URL` | Your Vercel site URL, e.g. `https://your-app.vercel.app` |
 
 5. `PORT` is set by Render automatically.
+
+**Free tier caveat:** Render’s free Web Service disk is **ephemeral**. On **redeploy** or **sleep cycles**, the container filesystem can reset and **`data/adswadi.db` may be lost** — the app will re-seed defaults. For a small marketing site that rarely redeploys, that’s often acceptable at **$0**. If you need persistence on Render, use a **persistent disk** (paid add-on) and set **`SQLITE_PATH`** to a path on that volume.
 
 ### Free tier sleep
 

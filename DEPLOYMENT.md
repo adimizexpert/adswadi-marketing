@@ -1,6 +1,7 @@
 # Adswadi deployment guide
 
-Stack: **GitHub** → **Vercel** (Next.js) + **Render** (API + Postgres). No third-party BaaS.
+Stack: **GitHub** → **Vercel** (Next.js) + **Render** (Express API only).  
+**No separate database bill:** the API uses **SQLite** inside the Web Service (`data/adswadi.db`).
 
 ## Push this project to GitHub
 
@@ -22,8 +23,7 @@ git push -u origin main
 | Part | Host |
 |------|------|
 | Next.js app | **Vercel** (repo root) |
-| Express API | **Render** Web Service (`adswadi-backend/`) |
-| PostgreSQL | **Render Postgres** (or any Postgres; Render keeps everything in one place) |
+| Express API + SQLite file DB | **One** Render **Web Service** (`adswadi-backend/`) |
 
 ---
 
@@ -35,21 +35,11 @@ git push -u origin main
 
 ---
 
-## 1. Create PostgreSQL on Render
+## 1. Deploy the API on Render (Web Service only)
 
-1. In [Render Dashboard](https://dashboard.render.com): **New +** → **PostgreSQL**.
-2. Choose name, region (same as your API later), instance (free tier if available).
-3. After creation, open the database → **Connect** — you will use:
-   - **Internal Database URL** — for the Web Service in the **same** region (recommended).
-   - **External Database URL** — for local dev or if the API runs elsewhere; often requires SSL.
+No Postgres, no extra database service.
 
-4. **Initialize schema:** open **Shell** (or use `psql` with the external URL) and run the full contents of **`adswadi-backend/schema.sql`** once. This creates tables and seed data (admin, plans, content, services).
-
----
-
-## 2. Deploy the API on Render
-
-1. **New +** → **Web Service** → connect **`adimizexpert/adswadi-marketing`** (or your repo).
+1. **New +** → **Web Service** → connect your repo (e.g. `adimizexpert/adswadi-marketing`).
 2. Settings:
 
    | Setting | Value |
@@ -62,18 +52,22 @@ git push -u origin main
 
    | Key | Value |
    |-----|--------|
-   | `DATABASE_URL` | Paste **Internal** URL from your Render Postgres, **or** link the database in the Web Service UI so Render injects it. |
-   | `DATABASE_SSL` | `true` if you use the **External** URL or your provider requires SSL; for **Internal** Render URL you can omit or set `false`. |
    | `JWT_SECRET` | e.g. `openssl rand -hex 32` |
-   | `FRONTEND_URL` | Your Vercel URL (set after step 3), e.g. `https://adswadi-marketing.vercel.app` |
+   | `FRONTEND_URL` | Your Vercel URL (set after step 2), e.g. `https://adswadi-marketing.vercel.app` |
+
+   Do **not** need `DATABASE_URL` — the app creates **`data/adswadi.db`** on disk and runs **`schema.sql`** on startup.
 
 4. Deploy and test: `https://YOUR-SERVICE.onrender.com/api/health` → `{ "status": "ok", ... }`.
 
 5. Optional: cron **GET** `/api/health` every ~10 minutes to reduce cold starts on the free tier.
 
+### Free tier: know the tradeoff
+
+Render’s **free** Web Service uses **ephemeral** storage. **Redeploys** (or full instance replacement) can **wipe** `data/adswadi.db`. The API will **re-create** the DB and **seed defaults** — CMS edits since last deploy may be lost. For many landing pages that’s acceptable at **$0**. To keep the DB across deploys on Render, you’d use a **persistent disk** (paid add-on) and set **`SQLITE_PATH`** to that path (see `adswadi-backend/README.md`).
+
 ---
 
-## 3. Deploy the frontend on Vercel
+## 2. Deploy the frontend on Vercel
 
 1. **Import** the same GitHub repo.
 2. Framework: **Next.js** (root = app).
@@ -89,7 +83,7 @@ git push -u origin main
 
 ---
 
-## 4. Verify
+## 3. Verify
 
 - Open the Vercel URL — pricing/content should load from the API.
 - Open **`/admin`** — log in with seeded user (see `adswadi-backend/README.md`).
@@ -97,12 +91,10 @@ git push -u origin main
 
 ---
 
-## 5. Environment checklist
+## 4. Environment checklist
 
 **Render Web Service**
 
-- `DATABASE_URL`
-- `DATABASE_SSL` (when needed)
 - `JWT_SECRET`
 - `FRONTEND_URL`
 
@@ -117,18 +109,19 @@ git push -u origin main
 
 ---
 
-## 6. Troubleshooting
+## 5. Troubleshooting
 
 | Issue | Check |
 |--------|--------|
-| `ECONNREFUSED` / DB errors | `DATABASE_URL`, SSL flags, Postgres running, `schema.sql` applied |
+| API errors on first boot | Build logs; `better-sqlite3` must compile on Render (default Node build usually works) |
 | CORS | `FRONTEND_URL` matches Vercel exactly |
 | Site shows defaults | `NEXT_PUBLIC_API_URL` on Vercel; redeploy after changes |
-| Admin 401 | Seed ran; JWT_SECRET stable between deploys |
+| Admin 401 | `JWT_SECRET` stable between deploys; default seed user |
+| CMS edits vanished after deploy | Expected on **free** tier ephemeral disk — see §1 |
 
 ---
 
-## 7. Security
+## 6. Security
 
 - Change default admin password after launch.
 - Never commit `.env` / `.env.local`.

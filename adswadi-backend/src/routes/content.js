@@ -9,12 +9,22 @@ router.get("/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+function parsePlanRow(row) {
+  if (!row) return row;
+  const features =
+    typeof row.features === "string"
+      ? JSON.parse(row.features)
+      : row.features;
+  return { ...row, features };
+}
+
 router.get("/plans", async (req, res, next) => {
   try {
     const { rows } = await query(
       `SELECT * FROM plans ORDER BY price ASC`
     );
-    return res.json(rows || []);
+    const out = (rows || []).map(parsePlanRow);
+    return res.json(out);
   } catch (err) {
     return next(err);
   }
@@ -91,7 +101,7 @@ router.patch("/plans/:id", authMiddleware, async (req, res, next) => {
       k === "features" ? JSON.stringify(patch[k]) : patch[k]
     );
     const setParts = keys.map((k, i) =>
-      k === "features" ? `features = $${i + 1}::jsonb` : `${k} = $${i + 1}`
+      k === "features" ? `features = $${i + 1}` : `${k} = $${i + 1}`
     );
     const idParam = keys.length + 1;
     const sql = `UPDATE plans SET ${setParts.join(", ")} WHERE id = $${idParam} RETURNING *`;
@@ -102,7 +112,7 @@ router.patch("/plans/:id", authMiddleware, async (req, res, next) => {
       return res.status(404).json({ error: "Plan not found" });
     }
 
-    return res.json(row);
+    return res.json(parsePlanRow(row));
   } catch (err) {
     return next(err);
   }
