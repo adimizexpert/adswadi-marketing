@@ -3,12 +3,57 @@
 import { useCallback, useEffect, useState } from "react";
 import type { CmsPlan, CmsService, SiteContentMap } from "@/lib/api";
 import { defaultContent } from "@/lib/cmsDefaults";
+import { CMS_MEDIA_KEYS, parseMediaItems } from "@/lib/mediaCms";
+import type { PortfolioImageItem } from "@/lib/portfolioContent";
+import {
+  portfolioInstagramItems,
+  portfolioUgcItems,
+  portfolioYoutubeItems,
+  youtubeShowcaseMediaFallback,
+} from "@/lib/portfolioContent";
 
 const TOKEN_KEY = "adswadi_admin_token";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
-type Tab = "pricing" | "content" | "services" | "password";
+type Tab = "pricing" | "content" | "media" | "services" | "password";
+
+const ACCENT_OPTIONS = ["", "violet", "rose", "amber", "cyan", "emerald", "indigo"] as const;
+
+const MEDIA_GROUPS: {
+  key: string;
+  label: string;
+  fallback: PortfolioImageItem[];
+}[] = [
+  {
+    key: CMS_MEDIA_KEYS.youtubeShowcase,
+    label: "Home — YouTube showcase (4 thumbnails under packages)",
+    fallback: youtubeShowcaseMediaFallback,
+  },
+  {
+    key: CMS_MEDIA_KEYS.portfolioYoutube,
+    label: "Portfolio page — YouTube grid",
+    fallback: portfolioYoutubeItems,
+  },
+  {
+    key: CMS_MEDIA_KEYS.portfolioInstagram,
+    label: "Portfolio page — Instagram grid",
+    fallback: portfolioInstagramItems,
+  },
+  {
+    key: CMS_MEDIA_KEYS.portfolioUgc,
+    label: "Portfolio page — UGC grid",
+    fallback: portfolioUgcItems,
+  },
+];
+
+function buildMediaDraft(content: SiteContentMap): Record<string, PortfolioImageItem[]> {
+  const out: Record<string, PortfolioImageItem[]> = {};
+  for (const { key, fallback } of MEDIA_GROUPS) {
+    out[key] = parseMediaItems(content[key], fallback);
+  }
+  return out;
+}
 
 const CONTENT_FIELDS: { key: keyof SiteContentMap | string; label: string }[] = [
   { key: "whatsapp_number", label: "WhatsApp Number (digits, e.g. 919876543210)" },
@@ -43,6 +88,9 @@ export default function AdminPage() {
 
   const [plans, setPlans] = useState<CmsPlan[]>([]);
   const [contentForm, setContentForm] = useState<SiteContentMap>(defaultContent);
+  const [mediaDraft, setMediaDraft] = useState<Record<string, PortfolioImageItem[]>>(() =>
+    buildMediaDraft(defaultContent)
+  );
   const [services, setServices] = useState<CmsService[]>([]);
 
   const [pwdCurrent, setPwdCurrent] = useState("");
@@ -76,7 +124,9 @@ export default function AdminPage() {
     }
     if (cRes.ok) {
       const data = (await cRes.json()) as SiteContentMap;
-      setContentForm({ ...defaultContent, ...data });
+      const merged = { ...defaultContent, ...data };
+      setContentForm(merged);
+      setMediaDraft(buildMediaDraft(merged));
     }
     if (sRes.ok) {
       const data = (await sRes.json()) as CmsService[];
@@ -162,6 +212,47 @@ export default function AdminPage() {
         return;
       }
       setBanner({ type: "ok", text: `Plan ${plan.name} saved.` });
+      await loadPublicData();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveMedia() {
+    setBusy(true);
+    setBanner(null);
+    try {
+      for (const { key } of MEDIA_GROUPS) {
+        const rows = mediaDraft[key] ?? [];
+        const json = JSON.stringify(
+          rows.map((r) => {
+            const o: Record<string, string> = {
+              title: r.title,
+              subtitle: r.subtitle,
+            };
+            if (r.url?.trim()) o.url = r.url.trim();
+            if (r.accent) o.accent = r.accent;
+            return o;
+          })
+        );
+        const res = await fetch(`${API_BASE}/api/content/${encodeURIComponent(key)}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            ...authHeaders(),
+          },
+          body: JSON.stringify({ value: json }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setBanner({
+            type: "err",
+            text: (data as { error?: string }).error || `Failed on ${key}`,
+          });
+          return;
+        }
+      }
+      setBanner({ type: "ok", text: "Media slots saved." });
       await loadPublicData();
     } finally {
       setBusy(false);
@@ -364,6 +455,7 @@ export default function AdminPage() {
             [
               ["pricing", "Pricing"],
               ["content", "Site content"],
+              ["media", "Media"],
               ["services", "Services"],
               ["password", "Password"],
             ] as const
@@ -414,6 +506,114 @@ export default function AdminPage() {
                 className="rounded-full border-2 border-[#7C3AED] bg-[#7C3AED] px-8 py-3 text-sm font-semibold text-white hover:bg-[#6d28d9] disabled:opacity-60"
               >
                 {busy ? "Saving…" : "Save all"}
+              </button>
+            </div>
+          )}
+          {tab === "media" && (
+            <div className="space-y-10">
+              <p className="text-sm text-gray-600">
+                Image URL (https://…), titles, and optional accent for gradient placeholders. Leave URL
+                empty to use the colored placeholder.
+              </p>
+              {MEDIA_GROUPS.map(({ key, label }) => (
+                <div key={key} className="rounded-2xl border border-purple-100 bg-gradient-to-br from-white to-violet-50/30 p-6">
+                  <h2 className="text-lg font-bold text-[#7C3AED]">{label}</h2>
+                  <div className="mt-4 space-y-4">
+                    {(mediaDraft[key] ?? []).map((row, idx) => (
+                      <div
+                        key={row.id}
+                        className="grid gap-3 rounded-xl border border-purple-100/80 bg-white/90 p-4 sm:grid-cols-2 lg:grid-cols-4"
+                      >
+                        <div className="sm:col-span-2 lg:col-span-1">
+                          <label className="text-xs font-medium text-gray-600">Image URL</label>
+                          <input
+                            className="mt-1 w-full rounded-lg border border-purple-100 px-2 py-1.5 text-sm"
+                            placeholder="https://…"
+                            value={row.url ?? ""}
+                            onChange={(e) =>
+                              setMediaDraft((prev) => {
+                                const next = { ...prev };
+                                const list = [...(next[key] ?? [])];
+                                list[idx] = { ...list[idx], url: e.target.value };
+                                next[key] = list;
+                                return next;
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600">Title</label>
+                          <input
+                            className="mt-1 w-full rounded-lg border border-purple-100 px-2 py-1.5 text-sm"
+                            value={row.title}
+                            onChange={(e) =>
+                              setMediaDraft((prev) => {
+                                const next = { ...prev };
+                                const list = [...(next[key] ?? [])];
+                                list[idx] = { ...list[idx], title: e.target.value };
+                                next[key] = list;
+                                return next;
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600">Subtitle</label>
+                          <input
+                            className="mt-1 w-full rounded-lg border border-purple-100 px-2 py-1.5 text-sm"
+                            value={row.subtitle}
+                            onChange={(e) =>
+                              setMediaDraft((prev) => {
+                                const next = { ...prev };
+                                const list = [...(next[key] ?? [])];
+                                list[idx] = { ...list[idx], subtitle: e.target.value };
+                                next[key] = list;
+                                return next;
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600">Accent</label>
+                          <select
+                            className="mt-1 w-full rounded-lg border border-purple-100 px-2 py-1.5 text-sm"
+                            value={row.accent ?? ""}
+                            onChange={(e) =>
+                              setMediaDraft((prev) => {
+                                const next = { ...prev };
+                                const list = [...(next[key] ?? [])];
+                                const v = e.target.value;
+                                list[idx] = {
+                                  ...list[idx],
+                                  accent:
+                                    v === ""
+                                      ? undefined
+                                      : (v as NonNullable<PortfolioImageItem["accent"]>),
+                                };
+                                next[key] = list;
+                                return next;
+                              })
+                            }
+                          >
+                            {ACCENT_OPTIONS.map((opt) => (
+                              <option key={opt || "default"} value={opt}>
+                                {opt === "" ? "(default)" : opt}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                disabled={busy}
+                onClick={saveMedia}
+                className="rounded-full border-2 border-[#7C3AED] bg-[#7C3AED] px-8 py-3 text-sm font-semibold text-white hover:bg-[#6d28d9] disabled:opacity-60"
+              >
+                {busy ? "Saving…" : "Save media"}
               </button>
             </div>
           )}

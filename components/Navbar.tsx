@@ -20,11 +20,12 @@ import { staggerContainer } from "@/lib/animations";
 type NavbarProps = { whatsappUrl?: string };
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "YouTube", href: "#youtube" },
-  { label: "Instagram", href: "#instagram" },
-  { label: "UGC", href: "#ugc" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "YouTube", href: "/#youtube" },
+  { label: "Instagram", href: "/#instagram" },
+  { label: "UGC", href: "/#ugc" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar({ whatsappUrl = WHATSAPP_URL }: NavbarProps) {

@@ -7,11 +7,12 @@ import {
 } from "@/lib/constants";
 
 const footerLinks = [
-  { label: "Home", href: "#home" },
-  { label: "YouTube", href: "#youtube" },
-  { label: "Instagram", href: "#instagram" },
-  { label: "UGC", href: "#ugc" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "YouTube", href: "/#youtube" },
+  { label: "Instagram", href: "/#instagram" },
+  { label: "UGC", href: "/#ugc" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Footer({

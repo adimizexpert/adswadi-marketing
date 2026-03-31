@@ -5,18 +5,20 @@ import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   BarChart3,
-  Bot,
-  Clapperboard,
-  ImageIcon,
-  Megaphone,
-  PenLine,
+  BrainCircuit,
+  Cpu,
+  Film,
+  Globe2,
+  LayoutTemplate,
+  MessageSquareText,
+  Radar,
   Sparkles,
-  TrendingUp,
+  Target,
+  UserPlus,
   Users,
+  Wand2,
   Youtube,
   Instagram,
-  MessageCircle,
-  Phone,
 } from "lucide-react";
 import Link from "next/link";
 import { fadeUpVariant, staggerContainer } from "@/lib/animations";
@@ -37,8 +39,8 @@ function BorderedCard({
       className="rounded-2xl border-2 border-[#7C3AED]/20 bg-white p-5 shadow-sm transition-shadow hover:border-[#7C3AED]/35 hover:shadow-md sm:p-6"
     >
       <div className="flex gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#7C3AED]/15 to-[#EC4899]/15 text-[#7C3AED]">
-          <Icon className="h-5 w-5" strokeWidth={2} aria-hidden />
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-violet-200/80 bg-gradient-to-b from-slate-50 to-violet-50/90 text-[#5B21B6] shadow-sm ring-1 ring-violet-100/60">
+          <Icon className="h-[22px] w-[22px]" strokeWidth={1.75} aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-bold text-gray-900 sm:text-lg">{title}</h3>
@@ -69,10 +71,10 @@ export function YouTubePlatformSection() {
             YouTube
           </span>
           <h2 className="mt-4 text-2xl font-extrabold text-[#7C3AED] sm:text-3xl md:text-4xl">
-            Social media management: YouTube first
+            YouTube: scripts, production, and growth
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-base text-gray-600 sm:text-lg">
-            Our most prominent focus is YouTube growth with scripts, thumbnails, editing, and AI-assisted production built to compete on what is trending now.
+            Story-led scripts, CTR-focused thumbnails, pro editing, and AI-assisted production aligned with what is trending in your niche.
           </p>
         </motion.div>
 
@@ -83,17 +85,17 @@ export function YouTubePlatformSection() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.08 }}
         >
-          <BorderedCard icon={PenLine} title="High retention scriptwriting">
+          <BorderedCard icon={BrainCircuit} title="High retention scriptwriting">
             Story-first scripts designed to hold attention from the first second through the full narrative arc.
           </BorderedCard>
-          <BorderedCard icon={ImageIcon} title="High CTR thumbnails">
+          <BorderedCard icon={LayoutTemplate} title="High CTR thumbnails">
             Click-focused thumbnail systems built to lift click-through rate in search and suggested traffic.
           </BorderedCard>
-          <BorderedCard icon={Clapperboard} title="Professional video editing">
+          <BorderedCard icon={Film} title="Professional video editing">
             Polished edits, pacing, sound, and graphics that match serious creator and brand standards.
           </BorderedCard>
-          <BorderedCard icon={Bot} title="AI video production">
-            AI-assisted production workflows where they save time and raise output without cutting quality.
+          <BorderedCard icon={Cpu} title="AI video production">
+            AI-assisted production workflows that save time and raise output without cutting quality.
           </BorderedCard>
         </motion.div>
 
@@ -105,8 +107,8 @@ export function YouTubePlatformSection() {
         >
           <div className="rounded-2xl border-2 border-[#EC4899]/30 bg-gradient-to-br from-[#FDF2F8] to-white p-6 sm:p-8">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EC4899]/15 text-[#DB2777]">
-                <TrendingUp className="h-6 w-6" strokeWidth={2} aria-hidden />
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-pink-200/70 bg-gradient-to-b from-pink-50 to-white text-[#BE185D] shadow-sm ring-1 ring-pink-100/50">
+                <Radar className="h-6 w-6" strokeWidth={1.75} aria-hidden />
               </span>
               <div>
                 <h3 className="text-lg font-bold text-gray-900 sm:text-xl">
@@ -156,10 +158,10 @@ export function InstagramPlatformSection() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.08 }}
         >
-          <BorderedCard icon={Sparkles} title="Scriptwriting with a trending hook">
+          <BorderedCard icon={Wand2} title="Scriptwriting with a trending hook">
             Short scripts built around hooks that match what is working on Reels and the feed right now so viewers stay past the first beat.
           </BorderedCard>
-          <BorderedCard icon={Clapperboard} title="Professional video editing">
+          <BorderedCard icon={Film} title="Professional video editing">
             Clean cuts, captions, pacing, and brand-safe looks for Reels, ads, and organic posts.
           </BorderedCard>
         </motion.div>
@@ -172,7 +174,7 @@ export function InstagramPlatformSection() {
         >
           <div className="rounded-2xl border-2 border-[#7C3AED]/25 bg-white p-6 shadow-sm sm:p-8">
             <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900 sm:text-xl">
-              <Megaphone className="h-5 w-5 text-[#7C3AED]" aria-hidden />
+              <MessageSquareText className="h-5 w-5 text-[#7C3AED]" strokeWidth={1.75} aria-hidden />
               Posting, community, and reporting
             </h3>
             <ul className="mt-4 grid gap-3 text-sm text-gray-700 sm:grid-cols-2 sm:text-base">
@@ -202,36 +204,7 @@ export function InstagramPlatformSection() {
   );
 }
 
-function formatPhoneForTel(digits: string) {
-  const d = digits.replace(/\D/g, "");
-  if (!d) return "";
-  return d.startsWith("91") ? `+${d}` : `+91${d}`;
-}
-
-function formatPhoneDisplay(digits: string) {
-  const d = digits.replace(/\D/g, "");
-  if (d.length >= 12 && d.startsWith("91")) {
-    const rest = d.slice(2);
-    if (rest.length === 10) {
-      return `+91 ${rest.slice(0, 5)} ${rest.slice(5)}`;
-    }
-  }
-  if (d.length === 10) {
-    return `+91 ${d.slice(0, 5)} ${d.slice(5)}`;
-  }
-  return digits || "Your number (set in Admin)";
-}
-
-export function UGCPlatformSection({
-  whatsappUrl,
-  whatsappDigits,
-}: {
-  whatsappUrl: string;
-  whatsappDigits: string;
-}) {
-  const telHref = formatPhoneForTel(whatsappDigits);
-  const display = formatPhoneDisplay(whatsappDigits);
-
+export function UGCPlatformSection({ whatsappUrl }: { whatsappUrl: string }) {
   return (
     <section
       id="ugc"
@@ -263,10 +236,10 @@ export function UGCPlatformSection({
           whileInView="visible"
           viewport={{ once: true, amount: 0.06 }}
         >
-          <BorderedCard icon={Megaphone} title="Lead generation content">
+          <BorderedCard icon={Target} title="Lead generation content">
             Creative built to pull qualified interest into your funnel, not just views.
           </BorderedCard>
-          <BorderedCard icon={Clapperboard} title="Content production">
+          <BorderedCard icon={Film} title="Content production">
             End-to-end production for ads, organic, and campaign bursts.
           </BorderedCard>
           <BorderedCard icon={BarChart3} title="Content strategy">
@@ -275,10 +248,10 @@ export function UGCPlatformSection({
           <BorderedCard icon={Sparkles} title="Ad creatives">
             Meta, Facebook, and Google-ready creative sets with testing in mind.
           </BorderedCard>
-          <BorderedCard icon={TrendingUp} title="Brand and profile optimization">
+          <BorderedCard icon={Globe2} title="Brand and profile optimization">
             Profiles, bios, highlights, and funnels tuned for trust and conversion.
           </BorderedCard>
-          <BorderedCard icon={Users} title="Influencer collaborations">
+          <BorderedCard icon={UserPlus} title="Influencer collaborations">
             Sourcing and coordination so partnerships match your offer and audience.
           </BorderedCard>
         </motion.div>
@@ -304,32 +277,6 @@ export function UGCPlatformSection({
                 Free consultation on WhatsApp
               </Link>
             </div>
-          </div>
-
-          <div className="rounded-2xl border-2 border-[#7C3AED]/25 bg-gradient-to-br from-purple-50/80 to-white p-6 text-center sm:p-8">
-            <p className="text-sm font-medium uppercase tracking-wide text-[#7C3AED]">
-              Direct line
-            </p>
-            <p className="mt-2 text-base text-gray-700 sm:text-lg">
-              More questions? Message or call on the same number we use for WhatsApp.
-            </p>
-            {telHref ? (
-              <a
-                href={`tel:${telHref}`}
-                className="mt-4 inline-flex items-center justify-center gap-2 text-xl font-bold text-gray-900 transition hover:text-[#7C3AED] sm:text-2xl"
-              >
-                <Phone className="h-6 w-6 shrink-0 text-[#7C3AED]" aria-hidden />
-                {display}
-              </a>
-            ) : (
-              <p className="mt-4 text-lg font-semibold text-gray-900">
-                Set your WhatsApp number in Admin so this line shows your phone.
-              </p>
-            )}
-            <p className="mt-3 flex items-center justify-center gap-1 text-sm text-gray-500">
-              <MessageCircle className="h-4 w-4" aria-hidden />
-              Same number for WhatsApp and phone when configured in Admin
-            </p>
           </div>
         </motion.div>
       </div>

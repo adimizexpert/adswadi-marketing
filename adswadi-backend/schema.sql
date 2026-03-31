@@ -56,12 +56,16 @@ WHERE NOT EXISTS (SELECT 1 FROM plans WHERE name = 'diamond');
 INSERT INTO site_content (key, value) VALUES
 ('hero_headline_line1', 'Adswadi SSM'),
 ('hero_headline_line2', 'Social media management — YouTube first. Instagram and UGC.'),
-('hero_subheadline', 'Scripting, CTR thumbnails, editing, AI video, and trend-led YouTube growth.'),
-('hero_subtext_line2', 'Then Instagram management and UGC. Pricing sits at the end of each platform section.'),
+('hero_subheadline', 'Scripts, CTR thumbnails, editing, and AI-assisted workflows tuned for trending growth. Pricing appears at the end of each platform section.'),
+('hero_subtext_line2', ''),
 ('whatsapp_number', '91XXXXXXXXXX'),
 ('cta_section_headline', 'Ready to talk through your stack?'),
 ('cta_section_subtext', 'Book a free consultation on WhatsApp. We align scope and pricing on a short call.'),
-('footer_tagline', 'YouTube, Instagram, and UGC under one roof.')
+('footer_tagline', 'YouTube, Instagram, and UGC under one roof.'),
+('media_youtube_showcase', '[]'),
+('media_portfolio_youtube', '[]'),
+('media_portfolio_instagram', '[]'),
+('media_portfolio_ugc', '[]')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO services (icon, title, description, sort_order)

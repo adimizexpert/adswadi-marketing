@@ -9,8 +9,11 @@ import {
   InstagramPlatformSection,
   UGCPlatformSection,
 } from "@/components/PlatformSections";
+import YouTubeThumbnailsShowcase from "@/components/YouTubeThumbnailsShowcase";
 import { getContent, getPlans } from "@/lib/api";
 import { defaultContent, defaultPlans } from "@/lib/cmsDefaults";
+import { CMS_MEDIA_KEYS, parseMediaItems } from "@/lib/mediaCms";
+import { youtubeShowcaseMediaFallback } from "@/lib/portfolioContent";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 async function loadCms() {
@@ -38,6 +41,10 @@ async function loadCms() {
 export default async function Home() {
   const { plans, content } = await loadCms();
   const wa = buildWhatsAppUrl(content.whatsapp_number);
+  const youtubeShowcaseItems = parseMediaItems(
+    content[CMS_MEDIA_KEYS.youtubeShowcase],
+    youtubeShowcaseMediaFallback
+  );
 
   return (
     <>
@@ -57,6 +64,7 @@ export default async function Home() {
           heading="YouTube packages"
           subheading="Pick a tier that matches your upload volume and support level."
         />
+        <YouTubeThumbnailsShowcase items={youtubeShowcaseItems} />
         <InstagramPlatformSection />
         <PlansSection
           sectionId="instagram-plans"
@@ -64,10 +72,7 @@ export default async function Home() {
           heading="Instagram packages"
           subheading="Same transparent structure tailored for Instagram execution and reporting."
         />
-        <UGCPlatformSection
-          whatsappUrl={wa}
-          whatsappDigits={content.whatsapp_number}
-        />
+        <UGCPlatformSection whatsappUrl={wa} />
         <CTASection
           headline={content.cta_section_headline}
           subtext={content.cta_section_subtext}
