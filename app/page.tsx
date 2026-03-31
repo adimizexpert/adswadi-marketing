@@ -49,7 +49,7 @@ export default async function Home() {
   return (
     <>
       <Navbar whatsappUrl={wa} />
-      <main className="pb-24 md:pb-0">
+      <main className="pb-6 md:pb-8">
         <Hero
           line1={content.hero_headline_line1}
           line2={content.hero_headline_line2}

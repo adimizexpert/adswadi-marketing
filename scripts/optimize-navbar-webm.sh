@@ -28,3 +28,8 @@ echo "Output: $OUT ($(du -h "$OUT" | cut -f1))"
 cp -a "$IN" "$BAK"
 mv "$OUT" "$IN"
 echo "Replaced $IN (backup: $BAK)"
+
+# H.264 MP4 for iOS Safari (NavbarLogo lists this source first; Safari does not play WebM).
+MP4_OUT="${ROOT}/public/Adswadi.mp4"
+ffmpeg -y -i "$IN" -c:v libx264 -pix_fmt yuv420p -movflags +faststart -vf "scale=300:-1" -an "$MP4_OUT"
+echo "Wrote $MP4_OUT for mobile Safari"

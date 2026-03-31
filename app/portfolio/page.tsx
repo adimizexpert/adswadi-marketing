@@ -51,7 +51,7 @@ export default async function PortfolioPage() {
   return (
     <>
       <Navbar whatsappUrl={wa} />
-      <main className="pb-24 md:pb-0">
+      <main className="pb-6 md:pb-8">
         <PortfolioPageView
           portfolioYoutube={portfolioYoutube}
           portfolioInstagram={portfolioInstagram}
