@@ -100,7 +100,7 @@ export default function Footer({
           </div>
         </div>
         <div className="mt-12 border-t border-white/10 pt-8 text-center text-xs text-white/60 sm:text-sm">
-          © 2026 Adswadi SSM. All rights reserved.
+          © 2026 Adswadi SMM. All rights reserved.
         </div>
       </div>
     </footer>

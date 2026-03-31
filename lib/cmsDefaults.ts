@@ -1,7 +1,7 @@
 import type { CmsPlan, CmsService, SiteContentMap } from "./api";
 
 export const defaultContent: SiteContentMap = {
-  hero_headline_line1: "Adswadi SSM",
+  hero_headline_line1: "Adswadi SMM",
   hero_headline_line2: "Social media management — YouTube first. Instagram and UGC.",
   hero_subheadline:
     "Scripts, CTR thumbnails, editing, and AI-assisted workflows tuned for trending growth. Pricing appears at the end of each platform section.",

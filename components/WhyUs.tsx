@@ -92,7 +92,7 @@ export default function WhyUs() {
                 </motion.span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                    Adswadi SSM
+                    Adswadi SMM
                   </p>
                   <p className="mt-1 text-sm font-medium text-gray-800 sm:text-base">
                     {row.good}

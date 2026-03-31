@@ -54,7 +54,7 @@ SELECT 'diamond', 'Diamond Pack', 29999, NULL,
 WHERE NOT EXISTS (SELECT 1 FROM plans WHERE name = 'diamond');
 
 INSERT INTO site_content (key, value) VALUES
-('hero_headline_line1', 'Adswadi SSM'),
+('hero_headline_line1', 'Adswadi SMM'),
 ('hero_headline_line2', 'Social media management — YouTube first. Instagram and UGC.'),
 ('hero_subheadline', 'Scripts, CTR thumbnails, editing, and AI-assisted workflows tuned for trending growth. Pricing appears at the end of each platform section.'),
 ('hero_subtext_line2', ''),
@@ -65,7 +65,8 @@ INSERT INTO site_content (key, value) VALUES
 ('media_youtube_showcase', '[]'),
 ('media_portfolio_youtube', '[]'),
 ('media_portfolio_instagram', '[]'),
-('media_portfolio_ugc', '[]')
+('media_portfolio_ugc', '[]'),
+('payment_config', '{"upiId":"","upiName":"Adswadi","whatsappNumber":"91XXXXXXXXXX","qrImageUrl":""}')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO services (icon, title, description, sort_order)

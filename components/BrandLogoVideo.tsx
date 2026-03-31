@@ -44,11 +44,11 @@ export default function BrandLogoVideo({ variant }: { variant: BrandLogoVariant 
   return (
     <Link
       href="/"
-      aria-label="Adswadi SSM home"
+      aria-label="Adswadi SMM home"
       className={v.link}
     >
       {showWordmark ? (
-        <span className={v.fallback}>Adswadi SSM</span>
+        <span className={v.fallback}>Adswadi SMM</span>
       ) : (
         <video
           ref={videoRef}

@@ -14,9 +14,9 @@ import {
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
-  title: "Portfolio — Adswadi SSM",
+  title: "Portfolio — Adswadi SMM",
   description:
-    "YouTube, Instagram, and UGC sample work from Adswadi SSM — scripts, thumbnails, and performance creative.",
+    "YouTube, Instagram, and UGC sample work from Adswadi SMM — scripts, thumbnails, and performance creative.",
 };
 
 async function loadContent() {

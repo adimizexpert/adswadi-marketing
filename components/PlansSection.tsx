@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import clsx from "clsx";
@@ -159,29 +160,33 @@ export default function PlansSection({
                       </motion.li>
                     ))}
                   </motion.ul>
-                  <motion.a
-                    href="#contact"
+                  <motion.div
                     whileHover={{ scale: isMobile ? 1 : 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={clsx(
-                      "relative mt-8 inline-flex w-full items-center justify-center overflow-hidden rounded-full border-2 border-[#7C3AED] px-6 py-3 text-center text-sm font-semibold text-[#7C3AED] transition-colors hover:bg-[#7C3AED] hover:text-white focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#7C3AED]",
-                      featured &&
-                        "bg-gradient-to-r from-[#7C3AED]/10 via-white to-[#EC4899]/10 bg-[length:200%_auto] hover:bg-none"
-                    )}
+                    className="mt-8 w-full"
                   >
-                    {featured && (
-                      <span
-                        className="pointer-events-none absolute inset-0 opacity-30"
-                        style={{
-                          background:
-                            "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)",
-                          animation: "shimmer 2.5s ease-in-out infinite",
-                        }}
-                        aria-hidden
-                      />
-                    )}
-                    <span className="relative z-[1]">{plan.cta_text}</span>
-                  </motion.a>
+                    <Link
+                      href={`/payment?name=${encodeURIComponent(plan.label)}&amount=${plan.price}`}
+                      className={clsx(
+                        "relative inline-flex w-full items-center justify-center overflow-hidden rounded-full border-2 border-[#7C3AED] px-6 py-3 text-center text-sm font-semibold text-[#7C3AED] transition-colors hover:bg-[#7C3AED] hover:text-white focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#7C3AED]",
+                        featured &&
+                          "bg-gradient-to-r from-[#7C3AED]/10 via-white to-[#EC4899]/10 bg-[length:200%_auto] hover:bg-none"
+                      )}
+                    >
+                      {featured && (
+                        <span
+                          className="pointer-events-none absolute inset-0 opacity-30"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)",
+                            animation: "shimmer 2.5s ease-in-out infinite",
+                          }}
+                          aria-hidden
+                        />
+                      )}
+                      <span className="relative z-[1]">{plan.cta_text}</span>
+                    </Link>
+                  </motion.div>
                 </div>
               </motion.div>
             );

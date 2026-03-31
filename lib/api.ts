@@ -1,6 +1,12 @@
+import type { PaymentConfig } from "./paymentTypes";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 const fetchOptions = { next: { revalidate: 60 } as const };
+
+export type PublicConfig = {
+  payment: PaymentConfig;
+};
 
 export type CmsPlan = {
   id: number;
@@ -55,4 +61,16 @@ export async function getServices(): Promise<CmsService[]> {
   }
   const data = await res.json();
   return Array.isArray(data) ? data : [];
+}
+
+/** Public payment + site config (no auth). */
+export async function getPublicConfig(): Promise<PublicConfig> {
+  if (!API_BASE) {
+    throw new Error("NEXT_PUBLIC_API_URL is not set");
+  }
+  const res = await fetch(`${API_BASE}/api/config`, fetchOptions);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch config: ${res.status}`);
+  }
+  return res.json() as Promise<PublicConfig>;
 }

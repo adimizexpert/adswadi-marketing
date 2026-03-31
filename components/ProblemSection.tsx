@@ -89,7 +89,7 @@ export default function ProblemSection() {
             animate={{ color: ["#EC4899", "#7C3AED", "#EC4899"] }}
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
           >
-            Adswadi SSM is built to fix exactly this.
+            Adswadi SMM is built to fix exactly this.
           </motion.span>
         </motion.p>
       </div>

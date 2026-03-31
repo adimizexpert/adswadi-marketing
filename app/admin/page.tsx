@@ -11,12 +11,14 @@ import {
   portfolioYoutubeItems,
   youtubeShowcaseMediaFallback,
 } from "@/lib/portfolioContent";
+import type { PaymentConfig } from "@/lib/paymentTypes";
+import { defaultPaymentConfig } from "@/lib/paymentDefaults";
 
 const TOKEN_KEY = "adswadi_admin_token";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
-type Tab = "pricing" | "content" | "media" | "services" | "password";
+type Tab = "pricing" | "content" | "media" | "payment" | "services" | "password";
 
 const ACCENT_OPTIONS = ["", "violet", "rose", "amber", "cyan", "emerald", "indigo"] as const;
 
@@ -92,6 +94,7 @@ export default function AdminPage() {
     buildMediaDraft(defaultContent)
   );
   const [services, setServices] = useState<CmsService[]>([]);
+  const [paymentConfig, setPaymentConfig] = useState<PaymentConfig>(defaultPaymentConfig);
 
   const [pwdCurrent, setPwdCurrent] = useState("");
   const [pwdNew, setPwdNew] = useState("");
@@ -113,10 +116,11 @@ export default function AdminPage() {
       setBanner({ type: "err", text: "Set NEXT_PUBLIC_API_URL in .env.local" });
       return;
     }
-    const [pRes, cRes, sRes] = await Promise.all([
+    const [pRes, cRes, sRes, cfgRes] = await Promise.all([
       fetch(`${API_BASE}/api/plans`),
       fetch(`${API_BASE}/api/content`),
       fetch(`${API_BASE}/api/services`),
+      fetch(`${API_BASE}/api/config`),
     ]);
     if (pRes.ok) {
       const data = (await pRes.json()) as CmsPlan[];
@@ -131,6 +135,20 @@ export default function AdminPage() {
     if (sRes.ok) {
       const data = (await sRes.json()) as CmsService[];
       setServices(Array.isArray(data) ? data : []);
+    }
+    if (cfgRes.ok) {
+      const data = (await cfgRes.json()) as { payment?: Partial<PaymentConfig> };
+      const p = data.payment;
+      setPaymentConfig({
+        upiId: typeof p?.upiId === "string" ? p.upiId : "",
+        upiName:
+          typeof p?.upiName === "string"
+            ? p.upiName.slice(0, 50)
+            : defaultPaymentConfig.upiName,
+        whatsappNumber:
+          typeof p?.whatsappNumber === "string" ? p.whatsappNumber : "",
+        qrImageUrl: typeof p?.qrImageUrl === "string" ? p.qrImageUrl : "",
+      });
     }
   }, []);
 
@@ -259,6 +277,33 @@ export default function AdminPage() {
     }
   }
 
+  async function savePayment() {
+    setBusy(true);
+    setBanner(null);
+    try {
+      const res = await fetch(`${API_BASE}/api/payment-config`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(),
+        },
+        body: JSON.stringify(paymentConfig),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setBanner({
+          type: "err",
+          text: (data as { error?: string }).error || "Save failed",
+        });
+        return;
+      }
+      setBanner({ type: "ok", text: "UPI payment settings saved." });
+      await loadPublicData();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function saveAllContent() {
     setBusy(true);
     setBanner(null);
@@ -359,7 +404,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#EDE0FF] via-[#FAE0F5] to-[#F0F4FF] px-4 py-16">
         <div className="mx-auto max-w-lg rounded-2xl border border-purple-100 bg-white p-8 shadow-card">
-          <h1 className="text-xl font-bold text-[#7C3AED]">Adswadi SSM Admin</h1>
+          <h1 className="text-xl font-bold text-[#7C3AED]">Adswadi SMM Admin</h1>
           <p className="mt-2 text-gray-600">
             Add{" "}
             <code className="rounded bg-purple-50 px-1">NEXT_PUBLIC_API_URL</code>{" "}
@@ -376,7 +421,7 @@ export default function AdminPage() {
       <div className="min-h-screen bg-gradient-to-br from-[#EDE0FF] via-[#FAE0F5] to-[#F0F4FF] px-4 py-16">
         <div className="mx-auto max-w-md rounded-2xl border border-purple-100 bg-white p-8 shadow-card">
           <h1 className="bg-gradient-to-r from-[#7C3AED] to-[#EC4899] bg-clip-text text-2xl font-extrabold text-transparent">
-            Adswadi SSM Admin
+            Adswadi SMM Admin
           </h1>
           <p className="mt-2 text-sm text-gray-600">Sign in to manage landing content.</p>
           <form onSubmit={handleLogin} className="mt-8 space-y-4">
@@ -425,7 +470,7 @@ export default function AdminPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="bg-gradient-to-r from-[#7C3AED] to-[#EC4899] bg-clip-text text-2xl font-extrabold text-transparent sm:text-3xl">
-              Adswadi SSM CMS
+              Adswadi SMM CMS
             </h1>
             <p className="text-sm text-gray-600">API: {API_BASE}</p>
           </div>
@@ -456,6 +501,7 @@ export default function AdminPage() {
               ["pricing", "Pricing"],
               ["content", "Site content"],
               ["media", "Media"],
+              ["payment", "UPI payment"],
               ["services", "Services"],
               ["password", "Password"],
             ] as const
@@ -614,6 +660,81 @@ export default function AdminPage() {
                 className="rounded-full border-2 border-[#7C3AED] bg-[#7C3AED] px-8 py-3 text-sm font-semibold text-white hover:bg-[#6d28d9] disabled:opacity-60"
               >
                 {busy ? "Saving…" : "Save media"}
+              </button>
+            </div>
+          )}
+          {tab === "payment" && (
+            <div className="mx-auto max-w-xl space-y-5">
+              <p className="text-sm text-gray-600">
+                Manual UPI checkout: customers pay in any UPI app and send a screenshot on WhatsApp.
+                QR codes are generated from this data — no static QR image required.
+              </p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">UPI ID (VPA)</label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-purple-100 px-3 py-2 font-mono text-sm"
+                  placeholder="name@paytm"
+                  value={paymentConfig.upiId}
+                  onChange={(e) =>
+                    setPaymentConfig((prev) => ({ ...prev, upiId: e.target.value }))
+                  }
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Payee display name (max 50 chars)
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-purple-100 px-3 py-2 text-sm"
+                  maxLength={50}
+                  value={paymentConfig.upiName}
+                  onChange={(e) =>
+                    setPaymentConfig((prev) => ({
+                      ...prev,
+                      upiName: e.target.value.slice(0, 50),
+                    }))
+                  }
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  WhatsApp for payment screenshots (digits; + optional)
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-purple-100 px-3 py-2 text-sm"
+                  placeholder="919876543210"
+                  value={paymentConfig.whatsappNumber}
+                  onChange={(e) =>
+                    setPaymentConfig((prev) => ({
+                      ...prev,
+                      whatsappNumber: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Legacy QR image URL (optional, stored only — not used on site)
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-purple-100 px-3 py-2 text-sm"
+                  placeholder="https://…"
+                  value={paymentConfig.qrImageUrl ?? ""}
+                  onChange={(e) =>
+                    setPaymentConfig((prev) => ({
+                      ...prev,
+                      qrImageUrl: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={savePayment}
+                className="rounded-full border-2 border-[#7C3AED] bg-[#7C3AED] px-8 py-3 text-sm font-semibold text-white hover:bg-[#6d28d9] disabled:opacity-60"
+              >
+                {busy ? "Saving…" : "Save payment settings"}
               </button>
             </div>
           )}

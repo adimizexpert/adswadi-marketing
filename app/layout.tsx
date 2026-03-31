@@ -29,7 +29,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Adswadi SSM — YouTube Growth & Content Agency",
+  title: "Adswadi SMM — YouTube Growth & Content Agency",
   description:
     "Scripting, editing, and thumbnails in one YouTube growth system. You focus on content; we handle the rest.",
   icons: {
@@ -42,11 +42,11 @@ export const metadata: Metadata = {
   },
   manifest: "/favicons/site.webmanifest",
   appleWebApp: {
-    title: "Adswadi SSM",
+    title: "Adswadi SMM",
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "Adswadi SSM — YouTube Growth Hub",
+    title: "Adswadi SMM — YouTube Growth Hub",
     description:
       "We turn your YouTube channel into a brand. Scripting, editing, and thumbnails in one place.",
   },

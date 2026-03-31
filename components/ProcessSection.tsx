@@ -56,7 +56,7 @@ export default function ProcessSection() {
           className="text-center"
         >
           <h2 className="text-2xl font-extrabold text-[#7C3AED] sm:text-3xl md:text-4xl">
-            How Adswadi SSM works
+            How Adswadi SMM works
           </h2>
           <p className="mt-3 text-base text-gray-600 sm:text-lg">
             Simple. Transparent. Result-driven.

@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 
 const authRoutes = require("./routes/auth");
 const contentRoutes = require("./routes/content");
+const paymentRoutes = require("./routes/payment");
 
 const app = express();
 
@@ -31,6 +32,7 @@ const globalLimiter = rateLimit({
 app.use(globalLimiter);
 
 app.use("/api", authRoutes);
+app.use("/api", paymentRoutes);
 app.use("/api", contentRoutes);
 
 app.use((err, req, res, next) => {
@@ -47,5 +49,5 @@ app.use((req, res) => {
 
 const port = Number(process.env.PORT) || 3001;
 app.listen(port, () => {
-  console.log(`Adswadi SSM API listening on port ${port}`);
+  console.log(`Adswadi SMM API listening on port ${port}`);
 });
