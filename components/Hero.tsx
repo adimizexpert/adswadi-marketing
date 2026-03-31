@@ -63,8 +63,9 @@ export default function Hero({
             </Link>
             <Link
               href="#youtube"
-              className="btn-secondary-line font-outfit inline-flex items-center justify-center rounded-full border-2 border-gray-300 bg-white/50 px-8 py-3.5 text-base font-semibold text-gray-800 transition-colors hover:border-[#7C3AED] hover:text-[#7C3AED] focus-visible:border-[#7C3AED] focus-visible:outline-none"
+              className="group font-outfit inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FF4B4B] via-[#E53935] to-[#B71C1C] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-red-900/25 ring-2 ring-white/30 transition-transform hover:scale-[1.02] hover:shadow-xl focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#E53935] focus-visible:ring-offset-2 active:scale-[0.99]"
             >
+              <Youtube className="h-5 w-5 shrink-0" aria-hidden />
               Explore YouTube services
             </Link>
           </div>

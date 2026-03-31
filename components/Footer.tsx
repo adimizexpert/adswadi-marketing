@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Instagram, Youtube } from "lucide-react";
+import BrandLogoVideo from "@/components/BrandLogoVideo";
 import WhatsAppLogo from "@/components/WhatsAppLogo";
 import {
   SOCIAL_INSTAGRAM,
@@ -27,10 +28,10 @@ export default function Footer({
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-between">
           <div className="text-center md:text-left">
-            <p className="bg-gradient-to-r from-[#C4B5FD] to-[#F9A8D4] bg-clip-text text-2xl font-extrabold text-transparent">
-              Adswadi SSM
-            </p>
-            <p className="mt-2 text-sm text-white/75">{tagline}</p>
+            <div className="flex justify-center md:justify-start">
+              <BrandLogoVideo variant="footer" />
+            </div>
+            <p className="mt-3 text-sm text-white/75">{tagline}</p>
           </div>
           <nav aria-label="Footer">
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-white/90">
@@ -49,7 +50,7 @@ export default function Footer({
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full bg-white/10 p-2.5 transition-colors hover:bg-white/20"
-              aria-label="YouTube"
+              aria-label="Adswadi on YouTube"
             >
               <Youtube className="h-5 w-5" />
             </a>
@@ -58,7 +59,7 @@ export default function Footer({
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full bg-white/10 p-2.5 transition-colors hover:bg-white/20"
-              aria-label="Instagram"
+              aria-label="Adswadi on Instagram"
             >
               <Instagram className="h-5 w-5" />
             </a>
