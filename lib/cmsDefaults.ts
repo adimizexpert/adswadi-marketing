@@ -1,17 +1,17 @@
 import type { CmsPlan, CmsService, SiteContentMap } from "./api";
 
 export const defaultContent: SiteContentMap = {
-  hero_headline_line1: "Hum Aapke YouTube Channel Ko",
-  hero_headline_line2: "Ek Brand Mein Badalte Hain.",
+  hero_headline_line1: "Social media management",
+  hero_headline_line2: "YouTube first. Instagram and UGC.",
   hero_subheadline:
-    "Scripting, Editing aur Thumbnails — sab kuch ek hi jagah.",
+    "Scripting, CTR thumbnails, editing, AI video, and trend-led YouTube growth.",
   hero_subtext_line2:
-    "Aap sirf content par focus karo, baaki sab humara kaam.",
+    "Then Instagram management and UGC. Pricing sits at the end of each platform section.",
   whatsapp_number: "91XXXXXXXXXX",
-  cta_section_headline: "Ready Ho Aapka Channel Grow Karne Ke Liye?",
+  cta_section_headline: "Ready to talk through your stack?",
   cta_section_subtext:
-    "Aaj hi free consultation book karo. Zero commitment, 100% value.",
-  footer_tagline: "YouTube Growth Ka Adda.",
+    "Book a free consultation on WhatsApp. We align scope and pricing on a short call.",
+  footer_tagline: "YouTube, Instagram, and UGC under one roof.",
 };
 
 export const defaultPlans: CmsPlan[] = [
@@ -73,7 +73,7 @@ export const defaultServices: CmsService[] = [
   },
   {
     id: 2,
-    icon: "🎬",
+    icon: "clapperboard",
     title: "Premium Video Editing",
     description:
       "Netflix-style documentary cuts se lekar viral Shorts tak. Motion graphics, color grading, captions — sab premium.",

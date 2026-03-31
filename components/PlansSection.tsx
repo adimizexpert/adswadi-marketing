@@ -43,15 +43,27 @@ const listItem = {
   hover: { opacity: 1 },
 };
 
-export default function PlansSection({ plans }: { plans: CmsPlan[] }) {
+type PlansSectionProps = {
+  plans: CmsPlan[];
+  sectionId?: string;
+  heading?: string;
+  subheading?: string;
+};
+
+export default function PlansSection({
+  plans,
+  sectionId = "plans",
+  heading = "Choose your package",
+  subheading = "No hidden charges. No lock-in. Results-focused plans.",
+}: PlansSectionProps) {
   const isMobile = useIsMobile();
   const hoverLift = isMobile ? -4 : -10;
   const hoverScale = isMobile ? 1 : 1.02;
 
   return (
     <section
-      id="plans"
-      className="relative scroll-mt-24 bg-gradient-to-b from-white to-[#FAF5FF] py-16 sm:py-24"
+      id={sectionId}
+      className="relative scroll-mt-24 border-t border-purple-100/80 bg-gradient-to-b from-[#FAF5FF]/50 to-white py-14 sm:py-20"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -62,10 +74,10 @@ export default function PlansSection({ plans }: { plans: CmsPlan[] }) {
           className="text-center"
         >
           <h2 className="text-2xl font-extrabold text-[#7C3AED] sm:text-3xl md:text-4xl">
-            Apna Plan Chunein
+            {heading}
           </h2>
           <p className="mt-3 text-base text-gray-600 sm:text-lg">
-            No hidden charges. No lock-in. Sirf results.
+            {subheading}
           </p>
         </motion.div>
 

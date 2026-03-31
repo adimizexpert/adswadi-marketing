@@ -54,14 +54,14 @@ SELECT 'diamond', 'Diamond Pack', 29999, NULL,
 WHERE NOT EXISTS (SELECT 1 FROM plans WHERE name = 'diamond');
 
 INSERT INTO site_content (key, value) VALUES
-('hero_headline_line1', 'Hum Aapke YouTube Channel Ko'),
-('hero_headline_line2', 'Ek Brand Mein Badalte Hain.'),
-('hero_subheadline', 'Scripting, Editing aur Thumbnails — sab kuch ek hi jagah.'),
-('hero_subtext_line2', 'Aap sirf content par focus karo, baaki sab humara kaam.'),
+('hero_headline_line1', 'Social media management'),
+('hero_headline_line2', 'YouTube first. Instagram and UGC.'),
+('hero_subheadline', 'Scripting, CTR thumbnails, editing, AI video, and trend-led YouTube growth.'),
+('hero_subtext_line2', 'Then Instagram management and UGC. Pricing sits at the end of each platform section.'),
 ('whatsapp_number', '91XXXXXXXXXX'),
-('cta_section_headline', 'Ready Ho Aapka Channel Grow Karne Ke Liye?'),
-('cta_section_subtext', 'Aaj hi free consultation book karo. Zero commitment, 100% value.'),
-('footer_tagline', 'YouTube Growth Ka Adda.')
+('cta_section_headline', 'Ready to talk through your stack?'),
+('cta_section_subtext', 'Book a free consultation on WhatsApp. We align scope and pricing on a short call.'),
+('footer_tagline', 'YouTube, Instagram, and UGC under one roof.')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO services (icon, title, description, sort_order)

@@ -191,7 +191,7 @@ export default function Hero({
               className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-[#25D366] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-green-900/15 transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
             >
               <WhatsAppLogo className="relative z-[1] h-5 w-5 shrink-0" />
-              <span className="relative z-[1]">Free Consultation Book Karein</span>
+              <span className="relative z-[1]">Book free consultation on WhatsApp</span>
               <motion.span
                 className="relative z-[1] inline-flex"
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -204,10 +204,10 @@ export default function Hero({
               whileTap={{ scale: 0.95 }}
             >
               <Link
-                href="#portfolio"
+                href="#youtube"
                 className="btn-secondary-line inline-flex items-center justify-center rounded-full border-2 border-gray-300 bg-white/50 px-8 py-3.5 text-base font-semibold text-gray-800 transition-colors hover:border-[#7C3AED] hover:text-[#7C3AED] focus-visible:border-[#7C3AED] focus-visible:outline-none"
               >
-                Humara Kaam Dekho
+                Explore YouTube services
               </Link>
             </motion.div>
           </div>
@@ -243,7 +243,7 @@ export default function Hero({
         transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
         aria-hidden
       >
-        <a href="#services" className="text-gray-400 hover:text-[#7C3AED]">
+        <a href="#youtube" className="text-gray-400 hover:text-[#7C3AED]">
           <ChevronDown className="h-8 w-8" />
         </a>
       </motion.div>

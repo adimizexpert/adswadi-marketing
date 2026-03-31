@@ -21,10 +21,9 @@ type NavbarProps = { whatsappUrl?: string };
 
 const navItems = [
   { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Plans", href: "#plans" },
-  { label: "Process", href: "#process" },
-  { label: "Portfolio", href: "#portfolio" },
+  { label: "YouTube", href: "#youtube" },
+  { label: "Instagram", href: "#instagram" },
+  { label: "UGC", href: "#ugc" },
   { label: "Contact", href: "#contact" },
 ];
 

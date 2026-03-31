@@ -8,9 +8,9 @@ import {
 
 const footerLinks = [
   { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Plans", href: "#plans" },
-  { label: "Process", href: "#process" },
+  { label: "YouTube", href: "#youtube" },
+  { label: "Instagram", href: "#instagram" },
+  { label: "UGC", href: "#ugc" },
   { label: "Contact", href: "#contact" },
 ];
 
