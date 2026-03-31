@@ -1,8 +1,8 @@
 import type { CmsPlan, CmsService, SiteContentMap } from "./api";
 
 export const defaultContent: SiteContentMap = {
-  hero_headline_line1: "Social media management",
-  hero_headline_line2: "YouTube first. Instagram and UGC.",
+  hero_headline_line1: "Adswadi SSM",
+  hero_headline_line2: "Social media management — YouTube first. Instagram and UGC.",
   hero_subheadline:
     "Scripting, CTR thumbnails, editing, AI video, and trend-led YouTube growth.",
   hero_subtext_line2:
@@ -28,7 +28,7 @@ export const defaultPlans: CmsPlan[] = [
       "4 Thumbnail Designs",
       "Email Support",
     ],
-    cta_text: "Silver Se Shuru Karein",
+    cta_text: "Start with Silver",
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ export const defaultPlans: CmsPlan[] = [
       "8 Thumbnails + A/B Testing",
       "Priority WhatsApp Support",
     ],
-    cta_text: "Gold Choose Karein",
+    cta_text: "Choose Gold",
   },
   {
     id: 3,
@@ -58,7 +58,7 @@ export const defaultPlans: CmsPlan[] = [
       "Unlimited Thumbnail Revisions",
       "Personal Brand Consultant",
     ],
-    cta_text: "Diamond Le Lo",
+    cta_text: "Get Diamond",
   },
 ];
 
@@ -68,7 +68,7 @@ export const defaultServices: CmsService[] = [
     icon: "filetext",
     title: "High-Retention Scripting",
     description:
-      "Psychology-based storytelling jo audience ko screen se chhodne na de. Deep research + viral hooks + emotional arc — sab included.",
+      "Psychology-based storytelling that keeps viewers watching. Deep research, viral hooks, and a full emotional arc included.",
     sort_order: 0,
   },
   {
@@ -76,7 +76,7 @@ export const defaultServices: CmsService[] = [
     icon: "clapperboard",
     title: "Premium Video Editing",
     description:
-      "Netflix-style documentary cuts se lekar viral Shorts tak. Motion graphics, color grading, captions — sab premium.",
+      "From documentary-style long edits to viral Shorts. Motion graphics, color grading, and captions at a premium level.",
     sort_order: 1,
   },
   {
@@ -84,7 +84,7 @@ export const defaultServices: CmsService[] = [
     icon: "image",
     title: "High-CTR Thumbnails",
     description:
-      "Aise designs jo scroll ruk ke click karne par majboor karein. A/B tested, data-backed, brand-consistent.",
+      "Designs built to stop the scroll and earn clicks. A/B tested, data-backed, and on-brand.",
     sort_order: 2,
   },
 ];

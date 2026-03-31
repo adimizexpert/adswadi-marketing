@@ -15,7 +15,7 @@ export default function NavbarLogo() {
         muted
         loop
         playsInline
-        aria-label="Adswadi — Home"
+        aria-label="Adswadi SSM — Home"
       >
         <source src="/Adswadi.webm" type="video/webm" />
       </video>

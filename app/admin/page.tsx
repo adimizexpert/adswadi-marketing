@@ -268,7 +268,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#EDE0FF] via-[#FAE0F5] to-[#F0F4FF] px-4 py-16">
         <div className="mx-auto max-w-lg rounded-2xl border border-purple-100 bg-white p-8 shadow-card">
-          <h1 className="text-xl font-bold text-[#7C3AED]">Admin</h1>
+          <h1 className="text-xl font-bold text-[#7C3AED]">Adswadi SSM Admin</h1>
           <p className="mt-2 text-gray-600">
             Add{" "}
             <code className="rounded bg-purple-50 px-1">NEXT_PUBLIC_API_URL</code>{" "}
@@ -285,7 +285,7 @@ export default function AdminPage() {
       <div className="min-h-screen bg-gradient-to-br from-[#EDE0FF] via-[#FAE0F5] to-[#F0F4FF] px-4 py-16">
         <div className="mx-auto max-w-md rounded-2xl border border-purple-100 bg-white p-8 shadow-card">
           <h1 className="bg-gradient-to-r from-[#7C3AED] to-[#EC4899] bg-clip-text text-2xl font-extrabold text-transparent">
-            Adswadi Admin
+            Adswadi SSM Admin
           </h1>
           <p className="mt-2 text-sm text-gray-600">Sign in to manage landing content.</p>
           <form onSubmit={handleLogin} className="mt-8 space-y-4">
@@ -334,7 +334,7 @@ export default function AdminPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="bg-gradient-to-r from-[#7C3AED] to-[#EC4899] bg-clip-text text-2xl font-extrabold text-transparent sm:text-3xl">
-              Adswadi CMS
+              Adswadi SSM CMS
             </h1>
             <p className="text-sm text-gray-600">API: {API_BASE}</p>
           </div>

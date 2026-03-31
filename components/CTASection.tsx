@@ -60,7 +60,7 @@ export default function CTASection({
             className="animate-breathe mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-10 py-4 text-base font-bold text-white shadow-lg transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-white sm:text-lg"
           >
             <WhatsAppLogo className="h-6 w-6 shrink-0" />
-            WhatsApp Par Baat Karein
+            Message us on WhatsApp
             <ArrowRight className="h-5 w-5" aria-hidden />
           </motion.a>
         </motion.div>

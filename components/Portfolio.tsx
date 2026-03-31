@@ -27,10 +27,10 @@ export default function Portfolio() {
           className="text-center"
         >
           <h2 className="text-2xl font-extrabold text-[#EC4899] sm:text-3xl md:text-4xl">
-            Humara Kaam Bolega
+            Let the work speak
           </h2>
           <p className="mt-3 text-base text-gray-600 sm:text-lg">
-            Yeh results real hain.
+            Real results from real channels.
           </p>
         </motion.div>
 

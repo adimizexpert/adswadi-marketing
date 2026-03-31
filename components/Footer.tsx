@@ -27,7 +27,7 @@ export default function Footer({
         <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-between">
           <div className="text-center md:text-left">
             <p className="bg-gradient-to-r from-[#C4B5FD] to-[#F9A8D4] bg-clip-text text-2xl font-extrabold text-transparent">
-              Adswadi
+              Adswadi SSM
             </p>
             <p className="mt-2 text-sm text-white/75">{tagline}</p>
           </div>
@@ -73,7 +73,7 @@ export default function Footer({
           </div>
         </div>
         <div className="mt-12 border-t border-white/10 pt-8 text-center text-xs text-white/60 sm:text-sm">
-          © 2026 Adswadi. All rights reserved.
+          © 2026 Adswadi SSM. All rights reserved.
         </div>
       </div>
     </footer>

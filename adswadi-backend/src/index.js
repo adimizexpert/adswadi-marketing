@@ -47,5 +47,5 @@ app.use((req, res) => {
 
 const port = Number(process.env.PORT) || 3001;
 app.listen(port, () => {
-  console.log(`Adswadi API listening on port ${port}`);
+  console.log(`Adswadi SSM API listening on port ${port}`);
 });

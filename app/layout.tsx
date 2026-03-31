@@ -13,9 +13,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Adswadi — YouTube Growth & Content Agency",
+  title: "Adswadi SSM — YouTube Growth & Content Agency",
   description:
-    "Scripting, editing, thumbnails — ek complete YouTube growth system. Aap sirf content par focus karo, baaki sab humara kaam.",
+    "Scripting, editing, and thumbnails in one YouTube growth system. You focus on content; we handle the rest.",
   icons: {
     icon: [
       { url: "/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
@@ -26,13 +26,13 @@ export const metadata: Metadata = {
   },
   manifest: "/favicons/site.webmanifest",
   appleWebApp: {
-    title: "Adswadi",
+    title: "Adswadi SSM",
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "Adswadi — YouTube Growth Ka Adda",
+    title: "Adswadi SSM — YouTube Growth Hub",
     description:
-      "Hum aapke YouTube channel ko ek brand mein badalte hain. Scripting, editing aur thumbnails — sab kuch ek hi jagah.",
+      "We turn your YouTube channel into a brand. Scripting, editing, and thumbnails in one place.",
   },
 };
 
@@ -46,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hi" className={poppins.variable}>
+    <html lang="en" className={poppins.variable}>
       <body className="min-h-screen bg-[#F0F4FF] font-sans">
         <MotionProvider>
           <PageLoader />

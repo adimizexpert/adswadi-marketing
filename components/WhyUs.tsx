@@ -6,15 +6,15 @@ import { slideLeftVariant, slideRightVariant } from "@/lib/animations";
 
 const rows = [
   {
-    bad: "Bas ek video banao aur upload karo",
-    good: "Strategy-first approach — pehle samjho, phir banao",
+    bad: "Film one video and upload it with no strategy",
+    good: "Strategy first: understand the audience, then produce",
   },
   {
-    bad: "Copy-paste scripts, zero research",
+    bad: "Copy-paste scripts and zero research",
     good: "Deep niche research + psychology-based storytelling",
   },
   {
-    bad: "Generic edits, bekar thumbnails",
+    bad: "Generic edits and weak thumbnails",
     good: "Data-driven thumbnails + cinematic editing",
   },
 ];
@@ -30,7 +30,7 @@ export default function WhyUs() {
           transition={{ duration: 0.45 }}
           className="text-center text-2xl font-extrabold text-[#EC4899] sm:text-3xl md:text-4xl"
         >
-          90% Agencies Se Alag Kyun Hain Hum?
+          Why we are different from 90% of agencies
         </motion.h2>
 
         <div className="mt-12 space-y-6">
@@ -92,7 +92,7 @@ export default function WhyUs() {
                 </motion.span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                    Adswadi
+                    Adswadi SSM
                   </p>
                   <p className="mt-1 text-sm font-medium text-gray-800 sm:text-base">
                     {row.good}

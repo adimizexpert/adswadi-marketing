@@ -19,7 +19,7 @@ const steps: {
     num: 1,
     Icon: Target,
     title: "Strategy",
-    body: "Aapke niche, audience aur goals ko deeply samjhte hain",
+    body: "We map your niche, audience, and goals in depth before we produce.",
   },
   {
     num: 2,
@@ -31,13 +31,13 @@ const steps: {
     num: 3,
     Icon: Clapperboard,
     title: "Production",
-    body: "Script se lekar final edit tak — sab humari team karta hai",
+    body: "From script through final edit, our team runs production end to end.",
   },
   {
     num: 4,
     Icon: LineChart,
-    title: "Upload & Analyse",
-    body: "Video upload + GSC-style result tracking + iteration",
+    title: "Upload & Analyze",
+    body: "Video upload, search-style result tracking, and continuous iteration",
   },
 ];
 
@@ -56,7 +56,7 @@ export default function ProcessSection() {
           className="text-center"
         >
           <h2 className="text-2xl font-extrabold text-[#7C3AED] sm:text-3xl md:text-4xl">
-            Kaise Kaam Karta Hai Adswadi?
+            How Adswadi SSM works
           </h2>
           <p className="mt-3 text-base text-gray-600 sm:text-lg">
             Simple. Transparent. Result-driven.

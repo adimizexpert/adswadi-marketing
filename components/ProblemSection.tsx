@@ -7,17 +7,17 @@ import { useIsMobile } from "@/lib/useIsMobile";
 
 const pains = [
   {
-    title: "Ghante mehnat karte ho, views phir bhi nahi aate",
-    sub: "Mehnat sahi direction mein honi chahiye — warna burnout hi milta hai.",
+    title: "You grind for hours but views still do not show up",
+    sub: "Effort has to point in the right direction or you only get burnout.",
   },
   {
     title:
-      "Script likhna, edit karna, thumbnail banana — akele sab impossible hai",
-    sub: "Har cheez alag skill hai; ek insaan sab perfect nahi kar sakta.",
+      "Writing scripts, editing, and thumbnails alone is impossible at scale",
+    sub: "Each skill is different; one person cannot cover every piece at elite level.",
   },
   {
-    title: "Doosre creators aage nikal rahe hain, aap wahi khade ho",
-    sub: "Jab system na ho, growth ruk jaati hai — consistency bhi mushkil lagti hai.",
+    title: "Other creators move ahead while you stay stuck",
+    sub: "Without a system, growth stalls and consistency feels impossible.",
   },
 ];
 
@@ -35,7 +35,7 @@ export default function ProblemSection() {
           transition={{ duration: 0.45 }}
           className="text-center text-2xl font-extrabold text-[#7C3AED] sm:text-3xl md:text-4xl"
         >
-          Kya Aap Bhi Yahi Feel Karte Ho?
+          Sound familiar?
         </motion.h2>
 
         <motion.div
@@ -89,7 +89,7 @@ export default function ProblemSection() {
             animate={{ color: ["#EC4899", "#7C3AED", "#EC4899"] }}
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
           >
-            Yahi problem solve karta hai Adswadi.
+            Adswadi SSM is built to fix exactly this.
           </motion.span>
         </motion.p>
       </div>

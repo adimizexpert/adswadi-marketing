@@ -51,7 +51,7 @@ export default function StickyWhatsApp({
             className="wa-ping-ring relative flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-green-900/20 ring-2 ring-white/30 transition-transform focus-visible:outline focus-visible:ring-2 focus-visible:ring-white active:scale-95"
           >
             <WhatsAppLogo className="h-5 w-5 shrink-0" />
-            WhatsApp Par Baat Karein
+            Message us on WhatsApp
             <ArrowRight className="h-5 w-5" aria-hidden />
           </a>
         </motion.div>
