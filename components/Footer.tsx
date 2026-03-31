@@ -7,13 +7,27 @@ import {
   SOCIAL_YOUTUBE,
 } from "@/lib/constants";
 
-const footerLinks = [
+const footerLinks: {
+  label: string;
+  href: string;
+  external?: boolean;
+}[] = [
   { label: "Home", href: "/" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "YouTube", href: "/#youtube" },
   { label: "Instagram", href: "/#instagram" },
   { label: "UGC", href: "/#ugc" },
   { label: "Contact", href: "/#contact" },
+  {
+    label: "Privacy Policy",
+    href: "https://adswadi.com/privacy-policy",
+    external: true,
+  },
+  {
+    label: "Refund Policy",
+    href: "https://adswadi.com/refund-policy",
+    external: true,
+  },
 ];
 
 export default function Footer({
@@ -37,9 +51,20 @@ export default function Footer({
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-white/90">
               {footerLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="hover:text-white">
-                    {l.label}
-                  </Link>
+                  {l.external ? (
+                    <a
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white"
+                    >
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link href={l.href} className="hover:text-white">
+                      {l.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
