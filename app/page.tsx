@@ -55,7 +55,6 @@ export default async function Home() {
           line2={content.hero_headline_line2}
           subheadline={content.hero_subheadline}
           subtextLine2={content.hero_subtext_line2}
-          whatsappUrl={wa}
         />
         <YouTubePlatformSection />
         <PlansSection

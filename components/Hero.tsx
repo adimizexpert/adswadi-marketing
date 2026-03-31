@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Instagram, Youtube } from "lucide-react";
-import WhatsAppLogo from "@/components/WhatsAppLogo";
+import { ChevronDown, Instagram, Youtube } from "lucide-react";
 
 export type HeroProps = {
   line1: string;
   line2: string;
   subheadline: string;
   subtextLine2: string;
-  whatsappUrl: string;
 };
 
 export default function Hero({
@@ -17,7 +15,6 @@ export default function Hero({
   line2,
   subheadline,
   subtextLine2,
-  whatsappUrl,
 }: HeroProps) {
   const subBlock = [subheadline, subtextLine2].filter(Boolean).join(" ");
 
@@ -38,9 +35,16 @@ export default function Hero({
 
       <div className="relative z-[2] mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-[2.75rem] lg:leading-[1.15] xl:text-6xl">
-            <span className="block text-[#7C3AED]">{line1}</span>
-            <span className="mt-2 block text-[#EC4899]">{line2}</span>
+          <h1 className="leading-[1.08]">
+            <span
+              className="font-display block bg-gradient-to-br from-[#5B21B6] via-[#7C3AED] to-[#A78BFA] bg-clip-text text-[clamp(2.25rem,6vw,3.75rem)] font-extrabold tracking-[-0.03em] text-transparent drop-shadow-[0_2px_24px_rgba(124,58,237,0.25)]"
+              style={{ fontFeatureSettings: '"ss01", "ss02"' }}
+            >
+              {line1}
+            </span>
+            <span className="font-outfit mt-3 block bg-gradient-to-r from-[#DB2777] via-[#EC4899] to-[#F472B6] bg-clip-text text-[clamp(1.35rem,3.8vw,2.25rem)] font-semibold leading-snug tracking-[-0.02em] text-transparent sm:mt-4">
+              {line2}
+            </span>
           </h1>
 
           {subBlock && (
@@ -50,22 +54,16 @@ export default function Hero({
           )}
 
           <div className="mt-10 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-green-900/15 transition-colors hover:bg-[#20BD5A] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+            <Link
+              href="#instagram"
+              className="group font-outfit inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F58529] via-[#DD2A7B] to-[#8134AF] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-pink-900/20 ring-2 ring-white/30 transition-transform hover:scale-[1.02] hover:shadow-xl focus-visible:outline focus-visible:ring-2 focus-visible:ring-[#DD2A7B] focus-visible:ring-offset-2 active:scale-[0.99]"
             >
-              <WhatsAppLogo className="h-5 w-5 shrink-0" />
-              <span>Book free consultation on WhatsApp</span>
-              <ArrowRight
-                className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5"
-                aria-hidden
-              />
-            </a>
+              <Instagram className="h-5 w-5 shrink-0" aria-hidden />
+              Explore Instagram services
+            </Link>
             <Link
               href="#youtube"
-              className="btn-secondary-line inline-flex items-center justify-center rounded-full border-2 border-gray-300 bg-white/50 px-8 py-3.5 text-base font-semibold text-gray-800 transition-colors hover:border-[#7C3AED] hover:text-[#7C3AED] focus-visible:border-[#7C3AED] focus-visible:outline-none"
+              className="btn-secondary-line font-outfit inline-flex items-center justify-center rounded-full border-2 border-gray-300 bg-white/50 px-8 py-3.5 text-base font-semibold text-gray-800 transition-colors hover:border-[#7C3AED] hover:text-[#7C3AED] focus-visible:border-[#7C3AED] focus-visible:outline-none"
             >
               Explore YouTube services
             </Link>

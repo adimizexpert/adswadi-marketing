@@ -18,6 +18,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        display: ["var(--font-syne)", "system-ui", "sans-serif"],
+        outfit: ["var(--font-outfit)", "system-ui", "sans-serif"],
       },
       boxShadow: {
         card: "0 4px 24px -4px rgba(124, 58, 237, 0.08), 0 0 0 1px rgba(243, 232, 255, 0.6)",

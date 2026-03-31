@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Outfit, Poppins, Syne } from "next/font/google";
 import MotionProvider from "@/components/MotionProvider";
 import PageLoader from "@/components/PageLoader";
 import PageTransition from "@/components/PageTransition";
@@ -9,6 +9,22 @@ const poppins = Poppins({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-poppins",
+  display: "swap",
+});
+
+/** Hero brand line — geometric, high impact */
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-syne",
+  display: "swap",
+});
+
+/** Hero supporting headline — clean pairing */
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-outfit",
   display: "swap",
 });
 
@@ -46,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={poppins.variable}>
+    <html lang="en" className={`${poppins.variable} ${syne.variable} ${outfit.variable}`}>
       <body className="min-h-screen bg-[#F0F4FF] font-sans">
         <MotionProvider>
           <PageLoader />
