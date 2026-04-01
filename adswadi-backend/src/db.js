@@ -31,6 +31,85 @@ if (fs.existsSync(schemaPath)) {
   console.warn("[db] schema.sql not found — tables may be missing.");
 }
 
+/** YouTube vs Instagram pricing rows share tier names but differ by `platform`. */
+function migratePlansPlatform() {
+  const cols = db.prepare("PRAGMA table_info(plans)").all();
+  const hasPlatform = cols.some((c) => c.name === "platform");
+  if (!hasPlatform) {
+    db.exec(
+      "ALTER TABLE plans ADD COLUMN platform TEXT NOT NULL DEFAULT 'youtube'"
+    );
+  }
+  db.exec(
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_plans_name_platform ON plans(name, platform)"
+  );
+
+  const igCount = db
+    .prepare(
+      "SELECT COUNT(*) AS c FROM plans WHERE platform = 'instagram'"
+    )
+    .get();
+  if (igCount && igCount.c === 0) {
+    const ins = db.prepare(
+      `INSERT INTO plans (name, label, price, badge, features, cta_text, platform, updated_at)
+       VALUES (@name, @label, @price, @badge, @features, @cta_text, 'instagram', datetime('now'))`
+    );
+    const instagramPlans = [
+      {
+        name: "silver",
+        label: "Starter Pack",
+        price: 9999,
+        badge: null,
+        features: JSON.stringify([
+          "8 Reels & Carousels / Month",
+          "Caption & hashtag research",
+          "Stories & highlights scheduling",
+          "Grid planning & reporting",
+          "Email support",
+        ]),
+        cta_text: "Start with Silver",
+      },
+      {
+        name: "gold",
+        label: "Growth Pack",
+        price: 18999,
+        badge: "Most Popular",
+        features: JSON.stringify([
+          "16 Reels + Stories / Month",
+          "Trend-led hooks & audio",
+          "Community management (DMs)",
+          "Monthly performance pack",
+          "Priority WhatsApp support",
+        ]),
+        cta_text: "Choose Gold",
+      },
+      {
+        name: "diamond",
+        label: "Diamond Pack",
+        price: 29999,
+        badge: null,
+        features: JSON.stringify([
+          "Full feed + Reels pipeline",
+          "Influencer & UGC coordination",
+          "Campaign bursts & launches",
+          "Ads creative handoff",
+          "Dedicated strategist",
+        ]),
+        cta_text: "Get Diamond",
+      },
+    ];
+    for (const p of instagramPlans) {
+      try {
+        ins.run(p);
+      } catch (e) {
+        console.warn("[db] instagram plan insert skipped:", e.message);
+      }
+    }
+  }
+}
+
+migratePlansPlatform();
+
 /**
  * PG-style $1, $2 → SQLite ? placeholders; strips ::jsonb.
  * @param {string} text

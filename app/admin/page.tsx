@@ -816,11 +816,48 @@ function PricingTab({
   busy: boolean;
   onSave: (plan: CmsPlan, draft: PlanDraft) => void | Promise<void>;
 }) {
+  const youtubePlans = plans.filter(
+    (p) => p.platform === "youtube" || p.platform === undefined
+  );
+  const instagramPlans = plans.filter((p) => p.platform === "instagram");
+
   return (
-    <div className="space-y-10">
-      {plans.map((plan) => (
-        <PlanCard key={plan.id} plan={plan} busy={busy} onSave={onSave} />
-      ))}
+    <div className="space-y-12">
+      <section>
+        <h2 className="text-xl font-bold text-gray-900">YouTube packages</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          These cards appear in the <strong>YouTube packages</strong> block on the homepage.
+          Each save only updates that row (by ID).
+        </p>
+        <div className="mt-6 space-y-10">
+          {youtubePlans.map((plan) => (
+            <PlanCard key={plan.id} plan={plan} busy={busy} onSave={onSave} />
+          ))}
+        </div>
+        {youtubePlans.length === 0 && (
+          <p className="mt-4 text-gray-600">No YouTube plans in the database.</p>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-gray-900">Instagram packages</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Separate rows for the <strong>Instagram packages</strong> section — edit prices and copy
+          independently from YouTube.
+        </p>
+        <div className="mt-6 space-y-10">
+          {instagramPlans.map((plan) => (
+            <PlanCard key={plan.id} plan={plan} busy={busy} onSave={onSave} />
+          ))}
+        </div>
+        {instagramPlans.length === 0 && (
+          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            No Instagram plans found. Restart the API once so the database migration can add the
+            Instagram tier rows, then refresh this page.
+          </p>
+        )}
+      </section>
+
       {plans.length === 0 && (
         <p className="text-gray-600">No plans loaded. Check API and database seed.</p>
       )}
@@ -871,10 +908,15 @@ function PlanCard({
 
   const title =
     plan.name.charAt(0).toUpperCase() + plan.name.slice(1).toLowerCase();
+  const platformLabel =
+    plan.platform === "instagram" ? "Instagram" : "YouTube";
 
   return (
     <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-white to-purple-50/40 p-6">
-      <h2 className="text-lg font-bold text-[#7C3AED]">{title}</h2>
+      <p className="text-xs font-semibold uppercase tracking-wider text-[#EC4899]">
+        {platformLabel}
+      </p>
+      <h2 className="mt-1 text-lg font-bold text-[#7C3AED]">{title}</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
           <label className="text-sm font-medium text-gray-700">Price (₹ / month)</label>

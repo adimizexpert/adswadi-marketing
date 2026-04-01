@@ -15,13 +15,17 @@ function parsePlanRow(row) {
     typeof row.features === "string"
       ? JSON.parse(row.features)
       : row.features;
-  return { ...row, features };
+  const platform =
+    row.platform === "instagram" ? "instagram" : "youtube";
+  return { ...row, features, platform };
 }
 
 router.get("/plans", async (req, res, next) => {
   try {
     const { rows } = await query(
-      `SELECT * FROM plans ORDER BY price ASC`
+      `SELECT * FROM plans
+       ORDER BY CASE platform WHEN 'youtube' THEN 0 WHEN 'instagram' THEN 1 ELSE 2 END,
+                price ASC`
     );
     const out = (rows || []).map(parsePlanRow);
     return res.json(out);

@@ -18,13 +18,14 @@ export const defaultContent: SiteContentMap = {
   media_portfolio_ugc: "[]",
 };
 
-export const defaultPlans: CmsPlan[] = [
+export const defaultYoutubePlans: CmsPlan[] = [
   {
     id: 1,
     name: "silver",
     label: "Starter Pack",
     price: 9999,
     badge: null,
+    platform: "youtube",
     features: [
       "4 Long Videos / Month",
       "Basic Research & Scripting",
@@ -40,6 +41,7 @@ export const defaultPlans: CmsPlan[] = [
     label: "Growth Pack",
     price: 18999,
     badge: "Most Popular",
+    platform: "youtube",
     features: [
       "8 Long Videos / Month",
       "Deep Storytelling Scripts",
@@ -55,6 +57,7 @@ export const defaultPlans: CmsPlan[] = [
     label: "Diamond Pack",
     price: 29999,
     badge: null,
+    platform: "youtube",
     features: [
       "12 Long + 10 Shorts / Month",
       "Viral Hooks + Growth Strategy",
@@ -64,6 +67,63 @@ export const defaultPlans: CmsPlan[] = [
     ],
     cta_text: "Get Diamond",
   },
+];
+
+export const defaultInstagramPlans: CmsPlan[] = [
+  {
+    id: 4,
+    name: "silver",
+    label: "Starter Pack",
+    price: 9999,
+    badge: null,
+    platform: "instagram",
+    features: [
+      "8 Reels & Carousels / Month",
+      "Caption & hashtag research",
+      "Stories & highlights scheduling",
+      "Grid planning & reporting",
+      "Email support",
+    ],
+    cta_text: "Start with Silver",
+  },
+  {
+    id: 5,
+    name: "gold",
+    label: "Growth Pack",
+    price: 18999,
+    badge: "Most Popular",
+    platform: "instagram",
+    features: [
+      "16 Reels + Stories / Month",
+      "Trend-led hooks & audio",
+      "Community management (DMs)",
+      "Monthly performance pack",
+      "Priority WhatsApp support",
+    ],
+    cta_text: "Choose Gold",
+  },
+  {
+    id: 6,
+    name: "diamond",
+    label: "Diamond Pack",
+    price: 29999,
+    badge: null,
+    platform: "instagram",
+    features: [
+      "Full feed + Reels pipeline",
+      "Influencer & UGC coordination",
+      "Campaign bursts & launches",
+      "Ads creative handoff",
+      "Dedicated strategist",
+    ],
+    cta_text: "Get Diamond",
+  },
+];
+
+/** All default tiers (used when API is unavailable). */
+export const defaultPlans: CmsPlan[] = [
+  ...defaultYoutubePlans,
+  ...defaultInstagramPlans,
 ];
 
 export const defaultServices: CmsService[] = [

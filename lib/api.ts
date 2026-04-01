@@ -16,6 +16,8 @@ export type CmsPlan = {
   badge: string | null;
   features: string[] | string;
   cta_text: string;
+  /** Which homepage pricing section this row belongs to */
+  platform?: "youtube" | "instagram";
 };
 
 export type CmsService = {

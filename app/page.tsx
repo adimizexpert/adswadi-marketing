@@ -12,6 +12,7 @@ import {
 import YouTubeThumbnailsShowcase from "@/components/YouTubeThumbnailsShowcase";
 import { getContent, getPlans } from "@/lib/api";
 import { defaultContent, defaultPlans } from "@/lib/cmsDefaults";
+import { splitPlansByPlatform } from "@/lib/plansSplit";
 import { CMS_MEDIA_KEYS, parseMediaItems } from "@/lib/mediaCms";
 import { youtubeShowcaseMediaFallback } from "@/lib/portfolioContent";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -40,6 +41,8 @@ async function loadCms() {
 
 export default async function Home() {
   const { plans, content } = await loadCms();
+  const { youtube: youtubePlans, instagram: instagramPlans } =
+    splitPlansByPlatform(plans);
   const wa = buildWhatsAppUrl(content.whatsapp_number);
   const youtubeShowcaseItems = parseMediaItems(
     content[CMS_MEDIA_KEYS.youtubeShowcase],
@@ -59,7 +62,7 @@ export default async function Home() {
         <YouTubePlatformSection />
         <PlansSection
           sectionId="youtube-plans"
-          plans={plans}
+          plans={youtubePlans}
           heading="YouTube packages"
           subheading="Pick a tier that matches your upload volume and support level."
         />
@@ -67,7 +70,7 @@ export default async function Home() {
         <InstagramPlatformSection />
         <PlansSection
           sectionId="instagram-plans"
-          plans={plans}
+          plans={instagramPlans}
           heading="Instagram packages"
           subheading="Same transparent structure tailored for Instagram execution and reporting."
         />

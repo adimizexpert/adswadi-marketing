@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS plans (
   badge TEXT,
   features TEXT NOT NULL,
   cta_text TEXT NOT NULL,
+  platform TEXT NOT NULL DEFAULT 'youtube',
   updated_at TEXT DEFAULT (datetime('now'))
 );
 
