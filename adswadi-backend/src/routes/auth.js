@@ -38,6 +38,13 @@ router.post("/login", loginLimiter, async (req, res, next) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    if (!process.env.JWT_SECRET || String(process.env.JWT_SECRET).length < 8) {
+      console.error("[auth] JWT_SECRET is missing or too short");
+      return res.status(500).json({
+        error: "Server misconfiguration: set JWT_SECRET on the API (e.g. Render env)",
+      });
+    }
+
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,

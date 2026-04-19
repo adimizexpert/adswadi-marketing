@@ -177,11 +177,21 @@ export default function AdminPage() {
         setLoginError("NEXT_PUBLIC_API_URL is not set");
         return;
       }
-      const res = await fetch(`${API_BASE}/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      let res: Response;
+      try {
+        res = await fetch(`${API_BASE}/api/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+      } catch (net) {
+        const msg =
+          net instanceof TypeError
+            ? `${net.message}. Usually: wrong API URL, API down, or browser blocking (CORS). Set Render FRONTEND_URL to this site’s exact origin (comma-separate multiple).`
+            : "Network error — check API URL and CORS.";
+        setLoginError(msg);
+        return;
+      }
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setLoginError((data as { error?: string }).error || "Login failed");
@@ -427,13 +437,6 @@ export default function AdminPage() {
             Adswadi SMM Admin
           </h1>
           <p className="mt-2 text-sm text-gray-600">Sign in to manage landing content.</p>
-          <p className="mt-3 rounded-lg border border-purple-100 bg-purple-50/80 px-3 py-2 text-xs leading-relaxed text-gray-700">
-            Sessions last <strong>30 days</strong>, then you need to sign in again. If login fails:
-            check your password; wait 15 minutes after many failed attempts; confirm{" "}
-            <code className="rounded bg-white px-1">NEXT_PUBLIC_API_URL</code> matches your live API.
-            Default seed credentials are documented in{" "}
-            <code className="rounded bg-white px-1">adswadi-backend/README.md</code> (change them in production).
-          </p>
           <form onSubmit={handleLogin} className="mt-6 space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">

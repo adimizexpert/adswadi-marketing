@@ -14,10 +14,21 @@ app.set("trust proxy", 1);
 
 app.use(express.json({ limit: "1mb" }));
 
-const frontend = process.env.FRONTEND_URL;
+/** Comma-separated origins, e.g. `https://app.vercel.app,https://www.example.com` */
+const frontendOrigins = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+const corsOrigin =
+  frontendOrigins.length === 0
+    ? true
+    : frontendOrigins.length === 1
+      ? frontendOrigins[0]
+      : frontendOrigins;
+
 app.use(
   cors({
-    origin: frontend || false,
+    origin: corsOrigin,
     credentials: true,
   })
 );

@@ -31,6 +31,96 @@ if (fs.existsSync(schemaPath)) {
   console.warn("[db] schema.sql not found — tables may be missing.");
 }
 
+const YOUTUBE_PLAN_SEEDS = [
+  {
+    name: "silver",
+    label: "Starter Pack",
+    price: 9999,
+    badge: null,
+    features: JSON.stringify([
+      "4 Long Videos / Month",
+      "Basic Research & Scripting",
+      "Standard Cuts & Subtitles",
+      "4 Thumbnail Designs",
+      "Email Support",
+    ]),
+    cta_text: "Start with Silver",
+  },
+  {
+    name: "gold",
+    label: "Growth Pack",
+    price: 18999,
+    badge: "Most Popular",
+    features: JSON.stringify([
+      "8 Long Videos / Month",
+      "Deep Storytelling Scripts",
+      "Premium Motion Graphics",
+      "8 Thumbnails + A/B Testing",
+      "Priority WhatsApp Support",
+    ]),
+    cta_text: "Choose Gold",
+  },
+  {
+    name: "diamond",
+    label: "Diamond Pack",
+    price: 29999,
+    badge: null,
+    features: JSON.stringify([
+      "12 Long + 10 Shorts / Month",
+      "Viral Hooks + Growth Strategy",
+      "Netflix-Style Documentary Editing",
+      "Unlimited Thumbnail Revisions",
+      "Personal Brand Consultant",
+    ]),
+    cta_text: "Get Diamond",
+  },
+];
+
+const INSTAGRAM_PLAN_SEEDS = [
+  {
+    name: "silver",
+    label: "Starter Pack",
+    price: 9999,
+    badge: null,
+    features: JSON.stringify([
+      "8 Reels & Carousels / Month",
+      "Caption & hashtag research",
+      "Stories & highlights scheduling",
+      "Grid planning & reporting",
+      "Email support",
+    ]),
+    cta_text: "Start with Silver",
+  },
+  {
+    name: "gold",
+    label: "Growth Pack",
+    price: 18999,
+    badge: "Most Popular",
+    features: JSON.stringify([
+      "16 Reels + Stories / Month",
+      "Trend-led hooks & audio",
+      "Community management (DMs)",
+      "Monthly performance pack",
+      "Priority WhatsApp support",
+    ]),
+    cta_text: "Choose Gold",
+  },
+  {
+    name: "diamond",
+    label: "Diamond Pack",
+    price: 29999,
+    badge: null,
+    features: JSON.stringify([
+      "Full feed + Reels pipeline",
+      "Influencer & UGC coordination",
+      "Campaign bursts & launches",
+      "Ads creative handoff",
+      "Dedicated strategist",
+    ]),
+    cta_text: "Get Diamond",
+  },
+];
+
 /** YouTube vs Instagram pricing rows share tier names but differ by `platform`. */
 function migratePlansPlatform() {
   const cols = db.prepare("PRAGMA table_info(plans)").all();
@@ -44,66 +134,32 @@ function migratePlansPlatform() {
     "CREATE UNIQUE INDEX IF NOT EXISTS idx_plans_name_platform ON plans(name, platform)"
   );
 
+  const total = db.prepare("SELECT COUNT(*) AS c FROM plans").get();
+  if (total && total.c === 0) {
+    console.warn("[db] plans table empty — seeding YouTube then Instagram tiers");
+    insertPlansForPlatform("youtube", YOUTUBE_PLAN_SEEDS);
+    insertPlansForPlatform("instagram", INSTAGRAM_PLAN_SEEDS);
+    return;
+  }
+
   const igCount = db
-    .prepare(
-      "SELECT COUNT(*) AS c FROM plans WHERE platform = 'instagram'"
-    )
+    .prepare("SELECT COUNT(*) AS c FROM plans WHERE platform = 'instagram'")
     .get();
   if (igCount && igCount.c === 0) {
-    const ins = db.prepare(
-      `INSERT INTO plans (name, label, price, badge, features, cta_text, platform, updated_at)
-       VALUES (@name, @label, @price, @badge, @features, @cta_text, 'instagram', datetime('now'))`
-    );
-    const instagramPlans = [
-      {
-        name: "silver",
-        label: "Starter Pack",
-        price: 9999,
-        badge: null,
-        features: JSON.stringify([
-          "8 Reels & Carousels / Month",
-          "Caption & hashtag research",
-          "Stories & highlights scheduling",
-          "Grid planning & reporting",
-          "Email support",
-        ]),
-        cta_text: "Start with Silver",
-      },
-      {
-        name: "gold",
-        label: "Growth Pack",
-        price: 18999,
-        badge: "Most Popular",
-        features: JSON.stringify([
-          "16 Reels + Stories / Month",
-          "Trend-led hooks & audio",
-          "Community management (DMs)",
-          "Monthly performance pack",
-          "Priority WhatsApp support",
-        ]),
-        cta_text: "Choose Gold",
-      },
-      {
-        name: "diamond",
-        label: "Diamond Pack",
-        price: 29999,
-        badge: null,
-        features: JSON.stringify([
-          "Full feed + Reels pipeline",
-          "Influencer & UGC coordination",
-          "Campaign bursts & launches",
-          "Ads creative handoff",
-          "Dedicated strategist",
-        ]),
-        cta_text: "Get Diamond",
-      },
-    ];
-    for (const p of instagramPlans) {
-      try {
-        ins.run(p);
-      } catch (e) {
-        console.warn("[db] instagram plan insert skipped:", e.message);
-      }
+    insertPlansForPlatform("instagram", INSTAGRAM_PLAN_SEEDS);
+  }
+}
+
+function insertPlansForPlatform(platform, seeds) {
+  const ins = db.prepare(
+    `INSERT INTO plans (name, label, price, badge, features, cta_text, platform, updated_at)
+     VALUES (@name, @label, @price, @badge, @features, @cta_text, @platform, datetime('now'))`
+  );
+  for (const p of seeds) {
+    try {
+      ins.run({ ...p, platform });
+    } catch (e) {
+      console.warn(`[db] insert ${platform} ${p.name}:`, e.message);
     }
   }
 }

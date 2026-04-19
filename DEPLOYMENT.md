@@ -53,7 +53,7 @@ No Postgres, no extra database service.
    | Key | Value |
    |-----|--------|
    | `JWT_SECRET` | e.g. `openssl rand -hex 32` |
-   | `FRONTEND_URL` | Your Vercel URL (set after step 2), e.g. `https://adswadi-marketing.vercel.app` |
+   | `FRONTEND_URL` | **Exact** browser origin for your Next.js site, e.g. `https://adswadi-marketing.vercel.app`. For **custom domain + Vercel**, list both: `https://www.yoursite.com,https://adswadi-marketing.vercel.app` (comma-separated, no spaces around URLs). If this does not match where you open `/admin`, the browser will block login (**CORS**). If unset, the API allows any origin (okay for testing; tighten in production). |
 
    Do **not** need `DATABASE_URL` — the app creates **`data/adswadi.db`** on disk and runs **`schema.sql`** on startup.
 
