@@ -8,7 +8,7 @@ const router = express.Router();
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 15,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many login attempts, try again later" },
@@ -41,7 +41,7 @@ router.post("/login", loginLimiter, async (req, res, next) => {
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "30d" }
     );
 
     return res.json({ token });

@@ -43,6 +43,8 @@ Free Web Services sleep after ~15 minutes idle. Ping **`GET /api/health`** on a 
 
 Default (from seed): **`admin`** / **`adswadi2025`** — change in production.
 
+**Sessions:** login returns a JWT valid **30 days**. After that, sign in again. If the Render DB was wiped and re-seeded, only the default password above applies until you change it again.
+
 ### Change password (authenticated)
 
 `POST /api/admin/change-password` with `Authorization: Bearer <JWT>`:
